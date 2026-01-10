@@ -120,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = Date.now();
 
         // 1. Money Accumulation (Passive income)
-        if (now - gameState.lastMoneyUpdate > 100) { // Every 0.1 seconds (Much faster)
-            gameState.money += 20 + (gameState.stage * 5); // Increased amount and rate
+        if (now - gameState.lastMoneyUpdate > 50) { // Every 0.05 seconds (Extremely fast)
+            gameState.money += 500 + (gameState.stage * 50); // Massive amount
             gameState.lastMoneyUpdate = now;
             updateMoneyUI();
         }
