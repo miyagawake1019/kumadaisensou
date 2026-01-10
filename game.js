@@ -23,7 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
         'little': { name: 'こぐま', cost: 100, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸' },
         'pillar': { name: '柱グマ', cost: 300, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿' },
         'big': { name: 'おオグマ', cost: 500, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻' },
-        'max': { name: '最大おおぐま', cost: 1000, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹' }
+        'max': { name: '最大おおぐま', cost: 1000, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹' },
+        'ninja': { name: '忍者グマ', cost: 2000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷' },
+        'magic': { name: '魔法グマ', cost: 5000, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙' },
+        'mecha': { name: 'メカグマ', cost: 10000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖' },
+        'galaxy': { name: '銀河グマ', cost: 50000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌' }
     };
 
     // Game State
@@ -150,22 +154,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const timeElapsed = (now - gameState.startTime) / 1000; // seconds
 
         // Base spawn rate
-        let spawnInterval = 5000 - (gameState.stage * 500); // Faster in later stages
-        if (spawnInterval < 2000) spawnInterval = 2000;
+        let spawnInterval = 5000 - (gameState.stage * 300); // Faster in later stages
+        if (spawnInterval < 500) spawnInterval = 500; // Cap speed
 
         if (now - gameState.enemySpawnTimer > spawnInterval) {
             // Determine enemy type based on time/difficulty
             let enemyType = 'little';
 
-            // Progressive difficulty
-            if (timeElapsed > 60) enemyType = 'max';      // After 60s
-            else if (timeElapsed > 30) enemyType = 'big'; // After 30s
-            else if (timeElapsed > 15) enemyType = 'pillar'; // After 15s
+            // Progressive difficulty scaled by stage
+            // Higher stages reach stronger units faster
+            const difficultyMultiplier = gameState.stage; // 1 to 10
+            const effectiveTime = timeElapsed * difficultyMultiplier;
+
+            if (effectiveTime > 300) enemyType = 'galaxy';
+            else if (effectiveTime > 200) enemyType = 'mecha';
+            else if (effectiveTime > 120) enemyType = 'magic';
+            else if (effectiveTime > 80) enemyType = 'ninja';
+            else if (effectiveTime > 50) enemyType = 'max';
+            else if (effectiveTime > 30) enemyType = 'big';
+            else if (effectiveTime > 15) enemyType = 'pillar';
 
             // Random chance to spawn weaker units even late game
-            const roll = Math.random();
-            if (enemyType === 'max' && roll < 0.7) enemyType = 'big';
-            if (enemyType === 'big' && roll < 0.6) enemyType = 'pillar';
+            // In high stages, force strong units
+            if (gameState.stage >= 8 && Math.random() < 0.3) {
+                 if (effectiveTime > 50) enemyType = 'max';
+                 // Ensure we don't downgrade too much in hard stages
+            }
+
+            // Fallback: If stage is high, start with stronger units
+            if (gameState.stage >= 5 && enemyType === 'little') enemyType = 'pillar';
+            if (gameState.stage >= 8 && (enemyType === 'little' || enemyType === 'pillar')) enemyType = 'big';
 
             spawnUnit(enemyType, 'enemy');
             gameState.enemySpawnTimer = now;
