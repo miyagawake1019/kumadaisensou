@@ -18,13 +18,41 @@
             </div>
         </div>
         <div id="game-screen" style="display: none;">
-            <h2 id="current-stage-title"></h2>
-            <div id="game-area">
-                <!-- ここにゲーム画面が描画されます -->
-                <p>ゲーム中...</p>
-                <p>（ここにゲームのメインコンテンツが入ります）</p>
+            <div id="game-header">
+                <h2 id="current-stage-title">Stage Title</h2>
+                <div id="money-container">¥ <span id="money-display">0</span></div>
             </div>
-            <button id="back-to-select-btn">ステージ選択に戻る</button>
+
+            <div id="battle-field">
+                <div id="player-base" class="base">
+                    <div class="base-hp">HP: <span id="player-base-hp">1000</span></div>
+                    🏠
+                </div>
+                <div id="lane">
+                    <!-- Units will be added here dynamically -->
+                </div>
+                <div id="enemy-base" class="base">
+                    <div class="base-hp">HP: <span id="enemy-base-hp">1000</span></div>
+                    🏰
+                </div>
+            </div>
+
+            <div id="controls">
+                <button class="summon-btn" data-cost="100" data-type="little">
+                    こぐま<br>¥100
+                </button>
+                <button class="summon-btn" data-cost="300" data-type="pillar">
+                    柱グマ<br>¥300
+                </button>
+                <button class="summon-btn" data-cost="500" data-type="big">
+                    おオグマ<br>¥500
+                </button>
+                <button class="summon-btn" data-cost="1000" data-type="max">
+                    最大おおぐま<br>¥1000
+                </button>
+            </div>
+
+            <button id="back-to-select-btn">撤退する (ステージ選択)</button>
         </div>
     </div>
     <script src="game.js"></script>

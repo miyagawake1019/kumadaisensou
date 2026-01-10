@@ -17,9 +17,11 @@ body {
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-#stage-select-screen, #game-screen {
+#stage-select-screen {
     width: 100%;
     height: 100%;
     display: flex;
@@ -29,9 +31,16 @@ body {
     text-align: center;
 }
 
+#game-screen {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
 h1 {
     font-size: 3em;
-    color: #8b4513; /* SaddleBrown */
+    color: #8b4513;
     margin-bottom: 20px;
 }
 
@@ -41,11 +50,11 @@ h1 {
     gap: 15px;
 }
 
-.stage-btn, #back-to-select-btn {
+.stage-btn {
     padding: 15px 30px;
     font-size: 1.2em;
     cursor: pointer;
-    background-color: #deb887; /* BurlyWood */
+    background-color: #deb887;
     border: none;
     border-radius: 5px;
     transition: background-color 0.3s, transform 0.1s;
@@ -53,19 +62,162 @@ h1 {
     font-weight: bold;
 }
 
-.stage-btn:hover, #back-to-select-btn:hover {
-    background-color: #cd853f; /* Peru */
+.stage-btn:hover {
+    background-color: #cd853f;
     transform: scale(1.05);
 }
 
-#game-area {
-    width: 90%;
-    height: 60%;
+/* Game Screen Styles */
+#game-header {
+    height: 50px;
+    background-color: #8d6e63;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+}
+
+#money-container {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #ffd700;
+}
+
+#battle-field {
+    flex-grow: 1;
     background-color: #e0f7fa;
-    border: 1px dashed #aaa;
-    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end; /* Align bases to bottom */
+    padding-bottom: 20px;
+    border-bottom: 5px solid #795548; /* Ground */
+}
+
+.base {
+    width: 80px;
+    height: 100px;
+    font-size: 4em;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: absolute;
+    bottom: 20px;
+    z-index: 10;
+}
+
+#player-base {
+    left: 20px;
+}
+
+#enemy-base {
+    right: 20px;
+    transform: scaleX(-1); /* Flip castle if needed, or just keep icon */
+}
+
+.base-hp {
+    position: absolute;
+    top: -30px;
+    font-size: 14px; /* Reset font size for text */
+    background: rgba(0,0,0,0.5);
+    color: white;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+#enemy-base .base-hp {
+    transform: scaleX(-1);
+}
+
+#lane {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.unit {
+    position: absolute;
+    bottom: 20px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+    transition: left 0.1s linear;
+}
+
+.unit.player {
+    color: #5d4037;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+}
+
+.unit.enemy {
+    color: #b71c1c;
+    transform: scaleX(-1); /* Face left */
+}
+
+/* Unit Sizes */
+.unit[data-type="little"] { width: 40px; height: 40px; font-size: 1.5em; }
+.unit[data-type="pillar"] { width: 50px; height: 80px; font-size: 2em; border-radius: 5px; } /* Tall */
+.unit[data-type="big"] { width: 70px; height: 70px; font-size: 2.5em; }
+.unit[data-type="max"] { width: 100px; height: 100px; font-size: 4em; }
+
+#controls {
+    height: 120px;
+    background-color: #5d4037;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+}
+
+.summon-btn {
+    width: 100px;
+    height: 80px;
+    background-color: #ffcc80;
+    border: 3px solid #e65100;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    transition: all 0.2s;
+}
+
+.summon-btn:active {
+    transform: scale(0.95);
+}
+
+.summon-btn:disabled {
+    background-color: #cfd8dc;
+    border-color: #b0bec5;
+    color: #90a4ae;
+    cursor: not-allowed;
+}
+
+#back-to-select-btn {
+    position: absolute;
+    top: 10px;
+    left: 10px; /* Changed to not conflict with header, or just put in header? Let's keep it but style it smaller */
+    padding: 5px 10px;
+    font-size: 0.8em;
+    background-color: #ef5350;
+    color: white;
+    display: none; /* Initially hidden, controlled by JS */
+}
+
+/* Override back button inside game screen to be styled differently if needed,
+   but currently it's ID based. Let's make it a small 'Retreat' button in the header or absolute */
+#game-screen #back-to-select-btn {
+   position: absolute;
+   top: 55px; /* Below header */
+   right: 10px;
+   background-color: rgba(255, 0, 0, 0.7);
+   z-index: 100;
 }
