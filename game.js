@@ -96,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Update UI
         stageSelectScreen.style.display = 'none';
         gameScreen.style.display = 'flex';
+        backToSelectBtn.style.display = 'block'; // Show back button
         currentStageTitle.textContent = stageName;
         updateMoneyUI();
         updateBaseHpUI();
@@ -110,6 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function stopGame() {
         clearInterval(gameLoopId);
+        backToSelectBtn.style.display = 'none'; // Hide back button
     }
 
     function gameLoop() {
@@ -118,8 +120,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = Date.now();
 
         // 1. Money Accumulation (Passive income)
-        if (now - gameState.lastMoneyUpdate > 500) { // Every 0.5 seconds
-            gameState.money += 10 + (gameState.stage * 2); // More money in later stages? Or constant?
+        if (now - gameState.lastMoneyUpdate > 100) { // Every 0.1 seconds (Much faster)
+            gameState.money += 20 + (gameState.stage * 5); // Increased amount and rate
             gameState.lastMoneyUpdate = now;
             updateMoneyUI();
         }
