@@ -40,7 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'angel': { name: '天使グマ', cost: 3000, hp: 800, attack: 200, speed: 2, cooldown: 4000, icon: '👼', id: 18 },
         'devil': { name: '悪魔グマ', cost: 4000, hp: 1200, attack: 400, speed: 3, cooldown: 4500, icon: '😈', id: 19 },
         'robot': { name: 'ロボグマ', cost: 6000, hp: 4000, attack: 300, speed: 0.5, cooldown: 8000, icon: '🦾', id: 20 },
-        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21 }
+        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21 },
+        'craft': { name: '攻撃クラフト', cost: 12000, hp: 3000, attack: 1500, speed: 5, cooldown: 6000, icon: '✈️', id: 22 },
+        'dragon': { name: 'ドラゴングマ', cost: 15000, hp: 8000, attack: 2000, speed: 2, cooldown: 12000, icon: '🐉', id: 23 },
+        'hero': { name: '勇者グマ', cost: 20000, hp: 5000, attack: 3000, speed: 3, cooldown: 10000, icon: '🗡️', id: 24 },
+        'alien': { name: 'エイリアングマ', cost: 30000, hp: 6000, attack: 4000, speed: 4, cooldown: 8000, icon: '👽', id: 25 },
+        'ghost': { name: 'ゴーストグマ', cost: 40000, hp: 2000, attack: 5000, speed: 6, cooldown: 5000, icon: '👻', id: 26 }
     };
 
     // --- Persistent Data Management ---
@@ -287,7 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * Math.pow(1.25, stageId), // Increased difficulty scaling (1.1 -> 1.25)
+            enemyBaseHp: 1000 * Math.pow(1.3, stageId), // Increased difficulty scaling (1.25 -> 1.3)
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
@@ -401,14 +406,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function spawnUnit(type, side) {
         const stats = UNIT_TYPES[type];
+
+        // Scale Enemy Stats
+        let hp = stats.hp;
+        let attack = stats.attack;
+
+        if (side === 'enemy') {
+            const multiplier = 1 + (gameState.stage * 0.2); // +20% per stage
+            hp *= multiplier;
+            attack *= multiplier;
+        }
+
         const unit = {
             id: Math.random().toString(36).substr(2, 9),
             type: type,
             side: side,
             x: side === 'player' ? PLAYER_BASE_X : ENEMY_BASE_X,
-            hp: stats.hp,
-            maxHp: stats.hp,
-            attack: stats.attack,
+            hp: hp,
+            maxHp: hp,
+            attack: attack,
             speed: stats.speed,
             range: 30, // Attack range
             element: createUnitElement(type, side)
@@ -533,7 +549,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isWin) {
             // Award Coins - significantly increased
-            const reward = 500 * gameState.stage; // Was 100 * stage
+            const reward = 1000 * gameState.stage; // Was 500 * stage
             playerData.coins += reward;
             saveData();
             message += `\n${reward} コイン獲得！`;

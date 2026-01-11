@@ -283,6 +283,11 @@ h1 {
 .unit[data-type="devil"] { width: 90px; height: 90px; font-size: 3.5em; border: 3px solid #b71c1c; background: #212121; color: red; }
 .unit[data-type="robot"] { width: 85px; height: 85px; font-size: 3.2em; border: 3px solid #78909c; background: #37474f; color: cyan; }
 .unit[data-type="samurai"] { width: 75px; height: 75px; font-size: 3em; border: 3px solid #1a237e; background: #e8eaf6; }
+.unit[data-type="craft"] { width: 100px; height: 60px; font-size: 3em; border: 2px solid #555; background: #b0bec5; border-radius: 5px 50% 50% 5px; } /* Plane shape-ish */
+.unit[data-type="dragon"] { width: 120px; height: 100px; font-size: 5em; border: 3px solid green; background: #e8f5e9; }
+.unit[data-type="hero"] { width: 80px; height: 80px; font-size: 3.5em; border: 3px solid blue; background: #e3f2fd; box-shadow: 0 0 10px blue; }
+.unit[data-type="alien"] { width: 70px; height: 90px; font-size: 3em; border: 2px solid lime; background: #000; color: lime; }
+.unit[data-type="ghost"] { width: 70px; height: 70px; font-size: 3em; opacity: 0.7; filter: blur(1px); background: #f3e5f5; border: 1px dashed purple; }
 
 @keyframes pulse {
     0% { transform: scale(1); }
