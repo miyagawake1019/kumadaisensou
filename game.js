@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * Math.pow(1.2, stageId), // Exponential difficulty
+            enemyBaseHp: 1000 * Math.pow(1.1, stageId), // Reduced difficulty scaling (1.2 -> 1.1)
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
@@ -358,37 +358,32 @@ document.addEventListener('DOMContentLoaded', () => {
         // Simple difficulty ramp: spawn enemies based on time elapsed
         const timeElapsed = (now - gameState.startTime) / 1000; // seconds
 
-        // Base spawn rate
-        let spawnInterval = 5000 - (gameState.stage * 300); // Faster in later stages
-        if (spawnInterval < 500) spawnInterval = 500; // Cap speed
+        // Base spawn rate - Slower than before
+        let spawnInterval = 6000 - (gameState.stage * 200);
+        if (spawnInterval < 1000) spawnInterval = 1000; // Cap speed not too fast
 
         if (now - gameState.enemySpawnTimer > spawnInterval) {
             // Determine enemy type based on time/difficulty
             let enemyType = 'little';
 
             // Progressive difficulty scaled by stage
-            // Higher stages reach stronger units faster
-            const difficultyMultiplier = gameState.stage; // 1 to 10
+            // Higher stages reach stronger units faster, but slowed down overall
+            const difficultyMultiplier = gameState.stage * 0.8; // Reduced multiplier
             const effectiveTime = timeElapsed * difficultyMultiplier;
 
-            if (effectiveTime > 300) enemyType = 'galaxy';
-            else if (effectiveTime > 200) enemyType = 'mecha';
-            else if (effectiveTime > 120) enemyType = 'magic';
-            else if (effectiveTime > 80) enemyType = 'ninja';
-            else if (effectiveTime > 50) enemyType = 'max';
-            else if (effectiveTime > 30) enemyType = 'big';
-            else if (effectiveTime > 15) enemyType = 'pillar';
+            // Adjusted thresholds to delay strong enemies
+            if (effectiveTime > 400) enemyType = 'galaxy';
+            else if (effectiveTime > 300) enemyType = 'mecha';
+            else if (effectiveTime > 200) enemyType = 'magic';
+            else if (effectiveTime > 120) enemyType = 'ninja';
+            else if (effectiveTime > 80) enemyType = 'max';
+            else if (effectiveTime > 50) enemyType = 'big';
+            else if (effectiveTime > 20) enemyType = 'pillar';
 
-            // Random chance to spawn weaker units even late game
-            // In high stages, force strong units
-            if (gameState.stage >= 8 && Math.random() < 0.3) {
-                 if (effectiveTime > 50) enemyType = 'max';
-                 // Ensure we don't downgrade too much in hard stages
+            // Ensure Galaxy Bear appears in very late stages regardless of time, but rare
+            if (gameState.stage >= 15 && Math.random() < 0.1) {
+                enemyType = 'galaxy';
             }
-
-            // Fallback: If stage is high, start with stronger units
-            if (gameState.stage >= 5 && enemyType === 'little') enemyType = 'pillar';
-            if (gameState.stage >= 8 && (enemyType === 'little' || enemyType === 'pillar')) enemyType = 'big';
 
             spawnUnit(enemyType, 'enemy');
             gameState.enemySpawnTimer = now;
@@ -528,8 +523,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let message = isWin ? "勝利！ (Victory!)" : "敗北... (Defeat...)";
 
         if (isWin) {
-            // Award Coins
-            const reward = 100 * gameState.stage;
+            // Award Coins - significantly increased
+            const reward = 500 * gameState.stage; // Was 100 * stage
             playerData.coins += reward;
             saveData();
             message += `\n${reward} コイン獲得！`;
