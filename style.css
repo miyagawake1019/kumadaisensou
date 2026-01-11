@@ -288,6 +288,9 @@ h1 {
 .unit[data-type="hero"] { width: 80px; height: 80px; font-size: 3.5em; border: 3px solid blue; background: #e3f2fd; box-shadow: 0 0 10px blue; }
 .unit[data-type="alien"] { width: 70px; height: 90px; font-size: 3em; border: 2px solid lime; background: #000; color: lime; }
 .unit[data-type="ghost"] { width: 70px; height: 70px; font-size: 3em; opacity: 0.7; filter: blur(1px); background: #f3e5f5; border: 1px dashed purple; }
+.unit[data-type="legend"] { width: 180px; height: 180px; font-size: 9em; border: 5px double gold; background: linear-gradient(45deg, #ffd700, #fff, #ffd700); box-shadow: 0 0 30px gold; animation: spin 5s linear infinite; }
+
+@keyframes spin { 100% { transform: rotate(360deg); } }
 
 @keyframes pulse {
     0% { transform: scale(1); }

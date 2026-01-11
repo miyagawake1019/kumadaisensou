@@ -45,7 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
         'dragon': { name: 'ドラゴングマ', cost: 15000, hp: 8000, attack: 2000, speed: 2, cooldown: 12000, icon: '🐉', id: 23 },
         'hero': { name: '勇者グマ', cost: 20000, hp: 5000, attack: 3000, speed: 3, cooldown: 10000, icon: '🗡️', id: 24 },
         'alien': { name: 'エイリアングマ', cost: 30000, hp: 6000, attack: 4000, speed: 4, cooldown: 8000, icon: '👽', id: 25 },
-        'ghost': { name: 'ゴーストグマ', cost: 40000, hp: 2000, attack: 5000, speed: 6, cooldown: 5000, icon: '👻', id: 26 }
+        'ghost': { name: 'ゴーストグマ', cost: 40000, hp: 2000, attack: 5000, speed: 6, cooldown: 5000, icon: '👻', id: 26 },
+        'legend': { name: '伝説のクマ', cost: 10000000, hp: 1000000, attack: 500000, speed: 5, cooldown: 20000, icon: '⚜️', id: 27 }
     };
 
     // --- Persistent Data Management ---
@@ -292,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * Math.pow(1.3, stageId), // Increased difficulty scaling (1.25 -> 1.3)
+            enemyBaseHp: 1000 * Math.pow(1.15, stageId), // Reduced difficulty scaling (1.3 -> 1.15)
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
@@ -399,6 +400,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 enemyType = 'galaxy';
             }
 
+            // Legend Bear in final stages
+            if (gameState.stage >= 40 && Math.random() < 0.05) {
+                enemyType = 'legend';
+            }
+
             spawnUnit(enemyType, 'enemy');
             gameState.enemySpawnTimer = now;
         }
@@ -412,7 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let attack = stats.attack;
 
         if (side === 'enemy') {
-            const multiplier = 1 + (gameState.stage * 0.2); // +20% per stage
+            const multiplier = 1 + (gameState.stage * 0.1); // +10% per stage (Reduced from 20%)
             hp *= multiplier;
             attack *= multiplier;
         }
