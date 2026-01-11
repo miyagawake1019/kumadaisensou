@@ -274,6 +274,11 @@ h1 {
 .unit[data-type="dimension"] { width: 80px; height: 80px; font-size: 4em; filter: invert(1); }
 .unit[data-type="god"] { width: 150px; height: 150px; font-size: 7em; text-shadow: 0 0 10px gold; }
 .unit[data-type="infinity"] { width: 160px; height: 160px; font-size: 8em; animation: pulse 1s infinite; }
+.unit[data-type="fire"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid red; background: #ffccbc; }
+.unit[data-type="ice"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid cyan; background: #e0f7fa; }
+.unit[data-type="thunder"] { width: 50px; height: 50px; font-size: 2em; border: 2px solid yellow; background: #fff9c4; }
+.unit[data-type="knight"] { width: 70px; height: 70px; font-size: 3em; border: 3px solid #555; background: #cfd8dc; border-radius: 10px; }
+.unit[data-type="king"] { width: 100px; height: 100px; font-size: 4em; border: 4px solid gold; background: #ffe0b2; }
 
 @keyframes pulse {
     0% { transform: scale(1); }

@@ -31,7 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'universe': { name: '宇宙グマ', cost: 100000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9 },
         'dimension': { name: '次元グマ', cost: 500000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10 },
         'god': { name: '神グマ', cost: 1000000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11 },
-        'infinity': { name: '無限グマ', cost: 5000000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12 }
+        'infinity': { name: '無限グマ', cost: 5000000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12 },
+        'fire': { name: '炎グマ', cost: 1500, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13 },
+        'ice': { name: '氷グマ', cost: 1500, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14 },
+        'thunder': { name: '雷グマ', cost: 2500, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15 },
+        'knight': { name: '騎士グマ', cost: 3000, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16 },
+        'king': { name: '王様グマ', cost: 20000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17 }
     };
 
     // --- Persistent Data Management ---
