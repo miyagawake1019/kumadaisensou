@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const playerBaseHpDisplay = document.getElementById('player-base-hp');
     const enemyBaseHpDisplay = document.getElementById('enemy-base-hp');
     const lane = document.getElementById('lane');
-    const summonButtons = document.querySelectorAll('.summon-btn');
+    const summonButtons = document.querySelectorAll('.summon-btn'); // Note: This might be empty initially
     const backToSelectBtn = document.getElementById('back-to-select-btn');
 
     // Game Constants
@@ -20,32 +20,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Unit Definitions
     const UNIT_TYPES = {
-        'little': { name: 'こぐま', cost: 100, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸' },
-        'pillar': { name: '柱グマ', cost: 300, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿' },
-        'big': { name: 'おオグマ', cost: 500, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻' },
-        'max': { name: '最大おおぐま', cost: 1000, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹' },
-        'ninja': { name: '忍者グマ', cost: 2000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷' },
-        'magic': { name: '魔法グマ', cost: 5000, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙' },
-        'mecha': { name: 'メカグマ', cost: 10000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖' },
-        'galaxy': { name: '銀河グマ', cost: 50000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌' }
+        'little': { name: 'こぐま', cost: 100, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1 },
+        'pillar': { name: '柱グマ', cost: 300, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2 },
+        'big': { name: 'おオグマ', cost: 500, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3 },
+        'max': { name: '最大おおぐま', cost: 1000, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4 },
+        'ninja': { name: '忍者グマ', cost: 2000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5 },
+        'magic': { name: '魔法グマ', cost: 5000, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6 },
+        'mecha': { name: 'メカグマ', cost: 10000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7 },
+        'galaxy': { name: '銀河グマ', cost: 50000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8 },
+        'universe': { name: '宇宙グマ', cost: 100000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9 },
+        'dimension': { name: '次元グマ', cost: 500000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10 },
+        'god': { name: '神グマ', cost: 1000000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11 },
+        'infinity': { name: '無限グマ', cost: 5000000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12 }
     };
 
-    // Game State
-    let gameLoopId;
-    let gameState = {
-        money: 0,
-        stage: 1,
-        units: [], // { id, type, side (player/enemy), x, hp, maxHp, attack, speed, element }
-        playerBaseHp: 1000,
-        enemyBaseHp: 1000,
-        lastMoneyUpdate: 0,
-        gameOver: false,
-        startTime: 0,
-        enemySpawnTimer: 0
+    // --- Persistent Data Management ---
+    const STORAGE_KEY = 'kuma_wars_data';
+    let playerData = {
+        coins: 1000, // Starting bonus
+        unlockedUnits: ['little'] // Default unlocked
     };
+
+    function loadData() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Merge with default to handle new fields
+                playerData = { ...playerData, ...parsed };
+            } catch (e) {
+                console.error("Save data corrupted", e);
+            }
+        }
+        updateGlobalCoinsUI();
+    }
+
+    function saveData() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(playerData));
+        updateGlobalCoinsUI();
+    }
+
+    function updateGlobalCoinsUI() {
+        const el = document.getElementById('player-coins');
+        if (el) el.textContent = playerData.coins;
+    }
+
+    // --- Screens ---
+    const mainMenuScreen = document.getElementById('main-menu-screen');
+    const gachaScreen = document.getElementById('gacha-screen');
+    const zukanScreen = document.getElementById('zukan-screen');
 
     // --- Event Listeners ---
 
+    // Main Menu Navigation
+    document.getElementById('menu-start-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        stageSelectScreen.style.display = 'flex';
+    });
+
+    document.getElementById('menu-gacha-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        gachaScreen.style.display = 'flex';
+        document.getElementById('gacha-message').textContent = '';
+        document.getElementById('gacha-result').textContent = '?';
+    });
+
+    document.getElementById('menu-zukan-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        zukanScreen.style.display = 'flex';
+        renderZukan();
+    });
+
+    document.getElementById('back-to-menu-btn').addEventListener('click', () => {
+        stageSelectScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
+    document.getElementById('back-to-menu-from-gacha-btn').addEventListener('click', () => {
+        gachaScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
+    document.getElementById('back-to-menu-from-zukan-btn').addEventListener('click', () => {
+        zukanScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
+    // Gacha Logic
+    document.getElementById('pull-gacha-btn').addEventListener('click', () => {
+        const cost = 1000;
+        if (playerData.coins < cost) {
+            document.getElementById('gacha-message').textContent = "コインが足りません！";
+            return;
+        }
+
+        playerData.coins -= cost;
+
+        // Random unit selection
+        const unitKeys = Object.keys(UNIT_TYPES);
+        const randomKey = unitKeys[Math.floor(Math.random() * unitKeys.length)];
+        const unit = UNIT_TYPES[randomKey];
+
+        document.getElementById('gacha-result').textContent = unit.icon;
+
+        if (!playerData.unlockedUnits.includes(randomKey)) {
+            playerData.unlockedUnits.push(randomKey);
+            document.getElementById('gacha-message').textContent = `NEW! ${unit.name} をゲット！`;
+        } else {
+            document.getElementById('gacha-message').textContent = `${unit.name} (入手済み) - 500コイン還元`;
+            playerData.coins += 500; // Refund half
+        }
+
+        saveData();
+    });
+
+    // Stage Selection
     document.querySelectorAll('.stage-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const stageId = parseInt(btn.getAttribute('data-stage'));
@@ -60,25 +149,65 @@ document.addEventListener('DOMContentLoaded', () => {
         stageSelectScreen.style.display = 'flex';
     });
 
-    summonButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const type = btn.getAttribute('data-type');
-            const cost = parseInt(btn.getAttribute('data-cost'));
-            if (gameState.money >= cost && !gameState.gameOver) {
-                gameState.money -= cost;
-                spawnUnit(type, 'player');
-                updateMoneyUI();
+    // Summon Buttons (Delegation)
+    const controlsDiv = document.getElementById('controls');
+    controlsDiv.addEventListener('click', (e) => {
+        // Handle clicks on the button or its children
+        const btn = e.target.closest('.summon-btn');
+        if (!btn) return;
 
-                // Simple cooldown visual (disable button temporarily)
-                btn.disabled = true;
-                setTimeout(() => {
-                    btn.disabled = false;
-                }, UNIT_TYPES[type].cooldown); // Use defined cooldown
-            }
-        });
+        const type = btn.getAttribute('data-type');
+        const cost = parseInt(btn.getAttribute('data-cost'));
+        if (gameState.money >= cost && !gameState.gameOver && !btn.disabled) {
+            gameState.money -= cost;
+            spawnUnit(type, 'player');
+            updateMoneyUI();
+
+            // Simple cooldown visual (disable button temporarily)
+            btn.disabled = true;
+            setTimeout(() => {
+                if (btn) btn.disabled = false;
+            }, UNIT_TYPES[type].cooldown);
+        }
     });
 
+    // Zukan Render
+    function renderZukan() {
+        const grid = document.getElementById('zukan-grid');
+        grid.innerHTML = '';
+
+        Object.keys(UNIT_TYPES).forEach(key => {
+            const unit = UNIT_TYPES[key];
+            const isUnlocked = playerData.unlockedUnits.includes(key);
+
+            const item = document.createElement('div');
+            item.className = 'zukan-item';
+            if (!isUnlocked) item.classList.add('locked');
+
+            item.innerHTML = `
+                <div class="zukan-icon">${isUnlocked ? unit.icon : '?'}</div>
+                <div class="zukan-name">${isUnlocked ? unit.name : '???'}</div>
+                <div class="zukan-cost">${isUnlocked ? '¥' + unit.cost : ''}</div>
+            `;
+            grid.appendChild(item);
+        });
+    }
+
     // --- Game Logic ---
+
+    // Game State
+    let gameLoopId;
+    let gameState = {
+        money: 0,
+        stage: 1,
+        units: [],
+        playerBaseHp: 1000,
+        enemyBaseHp: 1000,
+        lastMoneyUpdate: 0,
+        gameOver: false,
+        startTime: 0,
+        enemySpawnTimer: 0
+    };
 
     function startGame(stageId, stageName) {
         // Reset State
@@ -87,7 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * stageId, // Stronger base for later stages
+            enemyBaseHp: 1000 * Math.pow(1.2, stageId), // Exponential difficulty
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
@@ -97,6 +226,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear Lane
         lane.innerHTML = '';
 
+        // Generate Controls based on Unlocks
+        controlsDiv.innerHTML = '';
+        playerData.unlockedUnits.forEach(key => {
+            const unit = UNIT_TYPES[key];
+            const btn = document.createElement('button');
+            btn.className = 'summon-btn';
+            btn.setAttribute('data-cost', unit.cost);
+            btn.setAttribute('data-type', key);
+            btn.innerHTML = `${unit.name}<br>¥${unit.cost}`;
+            controlsDiv.appendChild(btn);
+        });
+
         // Update UI
         stageSelectScreen.style.display = 'none';
         gameScreen.style.display = 'flex';
@@ -104,9 +245,6 @@ document.addEventListener('DOMContentLoaded', () => {
         currentStageTitle.textContent = stageName;
         updateMoneyUI();
         updateBaseHpUI();
-
-        // Enable buttons
-        summonButtons.forEach(btn => btn.disabled = false);
 
         // Start Loop
         if (gameLoopId) clearInterval(gameLoopId);
@@ -319,9 +457,26 @@ document.addEventListener('DOMContentLoaded', () => {
     function endGame(isWin) {
         gameState.gameOver = true;
         stopGame();
-        alert(isWin ? "勝利！ (Victory!)" : "敗北... (Defeat...)");
-        // Could show a result screen instead of alert
+
+        let message = isWin ? "勝利！ (Victory!)" : "敗北... (Defeat...)";
+
+        if (isWin) {
+            // Award Coins
+            const reward = 100 * gameState.stage;
+            playerData.coins += reward;
+            saveData();
+            message += `\n${reward} コイン獲得！`;
+        }
+
+        alert(message);
+
+        // Return to Select
+        gameScreen.style.display = 'none';
+        stageSelectScreen.style.display = 'flex';
     }
+
+    // Initialize
+    loadData();
 
     // --- UI Updates ---
 
@@ -335,7 +490,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateButtonsState() {
-        summonButtons.forEach(btn => {
+        const dynamicButtons = document.querySelectorAll('.summon-btn');
+        dynamicButtons.forEach(btn => {
             const cost = parseInt(btn.getAttribute('data-cost'));
             if (gameState.money < cost && !btn.disabled) {
                 btn.style.opacity = '0.5';
