@@ -38,7 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const STORAGE_KEY = 'kuma_wars_data';
     let playerData = {
         coins: 1000, // Starting bonus
-        unlockedUnits: ['little'] // Default unlocked
+        unlockedUnits: ['little'], // Default unlocked
+        selectedDeck: ['little'] // Units selected for battle (max 3)
     };
 
     function loadData() {
@@ -69,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainMenuScreen = document.getElementById('main-menu-screen');
     const gachaScreen = document.getElementById('gacha-screen');
     const zukanScreen = document.getElementById('zukan-screen');
+    const teamSelectScreen = document.getElementById('team-select-screen');
 
     // --- Event Listeners ---
 
@@ -91,6 +93,12 @@ document.addEventListener('DOMContentLoaded', () => {
         renderZukan();
     });
 
+    document.getElementById('menu-team-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        teamSelectScreen.style.display = 'flex';
+        renderTeamSelect();
+    });
+
     document.getElementById('back-to-menu-btn').addEventListener('click', () => {
         stageSelectScreen.style.display = 'none';
         mainMenuScreen.style.display = 'flex';
@@ -106,9 +114,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mainMenuScreen.style.display = 'flex';
     });
 
+    document.getElementById('back-to-menu-from-team-btn').addEventListener('click', () => {
+        teamSelectScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
     // Gacha Logic
     document.getElementById('pull-gacha-btn').addEventListener('click', () => {
-        const cost = 1000;
+        const cost = 100;
         if (playerData.coins < cost) {
             document.getElementById('gacha-message').textContent = "コインが足りません！";
             return;
@@ -193,6 +206,55 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Team Select Render & Logic
+    function renderTeamSelect() {
+        const grid = document.getElementById('team-grid');
+        grid.innerHTML = '';
+
+        playerData.unlockedUnits.forEach(key => {
+            const unit = UNIT_TYPES[key];
+            const isSelected = playerData.selectedDeck.includes(key);
+
+            const item = document.createElement('div');
+            item.className = 'team-item';
+            if (isSelected) item.classList.add('selected');
+
+            item.innerHTML = `
+                <div class="zukan-icon">${unit.icon}</div>
+                <div class="zukan-name">${unit.name}</div>
+            `;
+
+            item.addEventListener('click', () => {
+                toggleUnitSelection(key);
+                renderTeamSelect(); // Re-render to show updates
+            });
+
+            grid.appendChild(item);
+        });
+
+        document.getElementById('team-count').textContent = `${playerData.selectedDeck.length} / 3`;
+    }
+
+    function toggleUnitSelection(key) {
+        if (playerData.selectedDeck.includes(key)) {
+            // Deselect
+            // Don't allow empty deck (optional, but good UX)
+            if (playerData.selectedDeck.length > 1) {
+                playerData.selectedDeck = playerData.selectedDeck.filter(k => k !== key);
+            }
+        } else {
+            // Select
+            if (playerData.selectedDeck.length < 3) {
+                playerData.selectedDeck.push(key);
+            } else {
+                // Already at 3, maybe alert or replace?
+                // For simplicity: alert
+                alert("3匹までしか選べません！(Max 3 units)");
+            }
+        }
+        saveData();
+    }
+
     // --- Game Logic ---
 
     // Game State
@@ -226,9 +288,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear Lane
         lane.innerHTML = '';
 
-        // Generate Controls based on Unlocks
+        // Generate Controls based on Selected Deck
         controlsDiv.innerHTML = '';
-        playerData.unlockedUnits.forEach(key => {
+        // Use default if nothing selected (shouldn't happen due to initialization logic)
+        const deck = (playerData.selectedDeck && playerData.selectedDeck.length > 0)
+            ? playerData.selectedDeck
+            : playerData.unlockedUnits.slice(0, 3);
+
+        deck.forEach(key => {
             const unit = UNIT_TYPES[key];
             const btn = document.createElement('button');
             btn.className = 'summon-btn';
