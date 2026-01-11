@@ -20,33 +20,41 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Unit Definitions
     const UNIT_TYPES = {
-        'little': { name: 'こぐま', cost: 50, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1 },
-        'pillar': { name: '柱グマ', cost: 150, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2 },
-        'big': { name: 'おオグマ', cost: 250, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3 },
-        'max': { name: '最大おおぐま', cost: 500, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4 },
-        'ninja': { name: '忍者グマ', cost: 1000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5 },
-        'magic': { name: '魔法グマ', cost: 2500, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6 },
-        'mecha': { name: 'メカグマ', cost: 5000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7 },
-        'galaxy': { name: '銀河グマ', cost: 25000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8 },
-        'universe': { name: '宇宙グマ', cost: 50000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9 },
-        'dimension': { name: '次元グマ', cost: 250000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10 },
-        'god': { name: '神グマ', cost: 500000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11 },
-        'infinity': { name: '無限グマ', cost: 2500000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12 },
-        'fire': { name: '炎グマ', cost: 750, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13 },
-        'ice': { name: '氷グマ', cost: 750, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14 },
-        'thunder': { name: '雷グマ', cost: 1250, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15 },
-        'knight': { name: '騎士グマ', cost: 1500, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16 },
-        'king': { name: '王様グマ', cost: 10000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17 },
-        'angel': { name: '天使グマ', cost: 3000, hp: 800, attack: 200, speed: 2, cooldown: 4000, icon: '👼', id: 18 },
-        'devil': { name: '悪魔グマ', cost: 4000, hp: 1200, attack: 400, speed: 3, cooldown: 4500, icon: '😈', id: 19 },
-        'robot': { name: 'ロボグマ', cost: 6000, hp: 4000, attack: 300, speed: 0.5, cooldown: 8000, icon: '🦾', id: 20 },
-        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21 },
-        'craft': { name: '攻撃クラフト', cost: 12000, hp: 3000, attack: 1500, speed: 5, cooldown: 6000, icon: '✈️', id: 22 },
-        'dragon': { name: 'ドラゴングマ', cost: 15000, hp: 8000, attack: 2000, speed: 2, cooldown: 12000, icon: '🐉', id: 23 },
-        'hero': { name: '勇者グマ', cost: 20000, hp: 5000, attack: 3000, speed: 3, cooldown: 10000, icon: '🗡️', id: 24 },
-        'alien': { name: 'エイリアングマ', cost: 30000, hp: 6000, attack: 4000, speed: 4, cooldown: 8000, icon: '👽', id: 25 },
-        'ghost': { name: 'ゴーストグマ', cost: 40000, hp: 2000, attack: 5000, speed: 6, cooldown: 5000, icon: '👻', id: 26 },
-        'legend': { name: '伝説のクマ', cost: 10000000, hp: 1000000, attack: 500000, speed: 5, cooldown: 20000, icon: '⚜️', id: 27 }
+        'little': { name: 'こぐま', cost: 50, hp: 10000000000, attack: 10000000000, speed: 2, cooldown: 1000, icon: '🧸', id: 1, rarity: 'common' },
+        'pillar': { name: '柱グマ', cost: 150, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2, rarity: 'common' },
+        'big': { name: 'おオグマ', cost: 250, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3, rarity: 'common' },
+        'max': { name: '最大おおぐま', cost: 500, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4, rarity: 'rare' },
+        'ninja': { name: '忍者グマ', cost: 1000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5, rarity: 'rare' },
+        'magic': { name: '魔法グマ', cost: 2500, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6, rarity: 'rare' },
+        'mecha': { name: 'メカグマ', cost: 5000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7, rarity: 'epic' },
+        'galaxy': { name: '銀河グマ', cost: 25000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8, rarity: 'legendary' },
+        'universe': { name: '宇宙グマ', cost: 50000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9, rarity: 'legendary' },
+        'dimension': { name: '次元グマ', cost: 250000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10, rarity: 'legendary' },
+        'god': { name: '神グマ', cost: 500000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11, rarity: 'legendary' },
+        'infinity': { name: '無限グマ', cost: 2500000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12, rarity: 'legendary' },
+        'fire': { name: '炎グマ', cost: 750, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13, rarity: 'rare' },
+        'ice': { name: '氷グマ', cost: 750, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14, rarity: 'rare' },
+        'thunder': { name: '雷グマ', cost: 1250, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15, rarity: 'rare' },
+        'knight': { name: '騎士グマ', cost: 1500, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16, rarity: 'rare' },
+        'king': { name: '王様グマ', cost: 10000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17, rarity: 'epic' },
+        'angel': { name: '天使グマ', cost: 3000, hp: 800, attack: 200, speed: 2, cooldown: 4000, icon: '👼', id: 18, rarity: 'rare' },
+        'devil': { name: '悪魔グマ', cost: 4000, hp: 1200, attack: 400, speed: 3, cooldown: 4500, icon: '😈', id: 19, rarity: 'rare' },
+        'robot': { name: 'ロボグマ', cost: 6000, hp: 4000, attack: 300, speed: 0.5, cooldown: 8000, icon: '🦾', id: 20, rarity: 'epic' },
+        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21, rarity: 'epic' },
+        'craft': { name: '攻撃クラフト', cost: 12000, hp: 3000, attack: 1500, speed: 5, cooldown: 6000, icon: '✈️', id: 22, rarity: 'epic' },
+        'dragon': { name: 'ドラゴングマ', cost: 15000, hp: 8000, attack: 2000, speed: 2, cooldown: 12000, icon: '🐉', id: 23, rarity: 'epic' },
+        'hero': { name: '勇者グマ', cost: 20000, hp: 5000, attack: 3000, speed: 3, cooldown: 10000, icon: '🗡️', id: 24, rarity: 'epic' },
+        'alien': { name: 'エイリアングマ', cost: 30000, hp: 6000, attack: 4000, speed: 4, cooldown: 8000, icon: '👽', id: 25, rarity: 'legendary' },
+        'ghost': { name: 'ゴーストグマ', cost: 40000, hp: 2000, attack: 5000, speed: 6, cooldown: 5000, icon: '👻', id: 26, rarity: 'legendary' },
+        'legend': { name: '伝説のクマ', cost: 10000000, hp: 1000000, attack: 500000, speed: 5, cooldown: 20000, icon: '⚜️', id: 27, rarity: 'legendary' },
+        'shadow': { name: '影グマ', cost: 5000, hp: 1500, attack: 600, speed: 6, cooldown: 4000, icon: '👥', id: 28, rarity: 'epic' },
+        'sun': { name: '太陽グマ', cost: 100000, hp: 30000, attack: 8000, speed: 1, cooldown: 15000, icon: '☀️', id: 29, rarity: 'legendary' },
+        'moon': { name: '月グマ', cost: 80000, hp: 25000, attack: 6000, speed: 2, cooldown: 14000, icon: '🌙', id: 30, rarity: 'legendary' },
+        'star': { name: '星グマ', cost: 60000, hp: 15000, attack: 10000, speed: 5, cooldown: 10000, icon: '⭐', id: 31, rarity: 'legendary' },
+        'blackhole': { name: 'ブラックホールグマ', cost: 5000000, hp: 800000, attack: 200000, speed: 0.2, cooldown: 50000, icon: '⚫', id: 32, rarity: 'legendary' },
+        'virus': { name: 'ウイルスグマ', cost: 3000, hp: 500, attack: 1000, speed: 4, cooldown: 2000, icon: '🦠', id: 33, rarity: 'rare' },
+        'glitch': { name: 'グリッチグマ', cost: 15000, hp: 5000, attack: 5000, speed: 8, cooldown: 500, icon: '👾', id: 34, rarity: 'epic' },
+        'ufo': { name: 'UFOグマ', cost: 45000, hp: 12000, attack: 3500, speed: 6, cooldown: 7000, icon: '🛸', id: 35, rarity: 'legendary' }
     };
 
     // --- Persistent Data Management ---
@@ -54,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let playerData = {
         coins: 1000, // Starting bonus
         unlockedUnits: ['little'], // Default unlocked
-        selectedDeck: ['little'] // Units selected for battle (max 3)
+        selectedDeck: ['little'], // Units selected for battle (max 3)
+        maxStageCleared: 0 // Track progression
     };
 
     function loadData() {
@@ -69,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         updateGlobalCoinsUI();
+        updateStageButtons();
     }
 
     function saveData() {
@@ -144,9 +154,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         playerData.coins -= cost;
 
-        // Random unit selection
+        // Weighted Random Selection
         const unitKeys = Object.keys(UNIT_TYPES);
-        const randomKey = unitKeys[Math.floor(Math.random() * unitKeys.length)];
+        let weightedPool = [];
+
+        unitKeys.forEach(key => {
+            const unit = UNIT_TYPES[key];
+            let weight = 1;
+            if (unit.rarity === 'common') weight = 50;
+            else if (unit.rarity === 'rare') weight = 20;
+            else if (unit.rarity === 'epic') weight = 5;
+            else if (unit.rarity === 'legendary') weight = 1;
+
+            for(let i=0; i<weight; i++) weightedPool.push(key);
+        });
+
+        const randomKey = weightedPool[Math.floor(Math.random() * weightedPool.length)];
         const unit = UNIT_TYPES[randomKey];
 
         document.getElementById('gacha-result').textContent = unit.icon;
@@ -344,8 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = Date.now();
 
         // 1. Money Accumulation (Passive income)
-        if (now - gameState.lastMoneyUpdate > 50) { // Every 0.05 seconds (Extremely fast)
-            gameState.money += 500 + (gameState.stage * 50); // Massive amount
+        if (now - gameState.lastMoneyUpdate > 30) { // Every 0.03 seconds (Insanely fast)
+            gameState.money += 1000 + (gameState.stage * 100); // Even bigger amount
             gameState.lastMoneyUpdate = now;
             updateMoneyUI();
         }
@@ -499,6 +522,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             u2.hp -= u1.attack;
                             u1.lastAttack = Date.now();
                             visualizeDamage(u2);
+
+                            // Fire Effect for Little Bear
+                            if (u1.type === 'little') {
+                                createFireEffect(u2.x, 20 + 25); // Approximate center Y
+                            }
                         }
                     }
                 }
@@ -557,7 +585,14 @@ document.addEventListener('DOMContentLoaded', () => {
             // Award Coins - significantly increased
             const reward = 1000 * gameState.stage; // Was 500 * stage
             playerData.coins += reward;
+
+            // Unlock next stage
+            if (gameState.stage > playerData.maxStageCleared) {
+                playerData.maxStageCleared = gameState.stage;
+            }
+
             saveData();
+            updateStageButtons();
             message += `\n${reward} コイン獲得！`;
         }
 
@@ -572,6 +607,20 @@ document.addEventListener('DOMContentLoaded', () => {
     loadData();
 
     // --- UI Updates ---
+
+    function updateStageButtons() {
+        const buttons = document.querySelectorAll('.stage-btn');
+        buttons.forEach(btn => {
+            const stage = parseInt(btn.getAttribute('data-stage'));
+            if (stage > playerData.maxStageCleared + 1) {
+                btn.disabled = true;
+                btn.classList.add('locked');
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('locked');
+            }
+        });
+    }
 
     function updateMoneyUI() {
         moneyDisplay.textContent = gameState.money;
@@ -608,5 +657,18 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
             base.style.transform = side === 'enemy' ? 'scaleX(-1)' : 'scale(1)';
         }, 100);
+    }
+
+    function createFireEffect(x, y) {
+        const fire = document.createElement('div');
+        fire.className = 'fire-effect';
+        fire.textContent = '🔥';
+        fire.style.left = x + 'px';
+        fire.style.bottom = y + 'px';
+        lane.appendChild(fire);
+
+        setTimeout(() => {
+            fire.remove();
+        }, 500);
     }
 });
