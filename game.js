@@ -20,23 +20,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Unit Definitions
     const UNIT_TYPES = {
-        'little': { name: 'こぐま', cost: 100, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1 },
-        'pillar': { name: '柱グマ', cost: 300, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2 },
-        'big': { name: 'おオグマ', cost: 500, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3 },
-        'max': { name: '最大おおぐま', cost: 1000, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4 },
-        'ninja': { name: '忍者グマ', cost: 2000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5 },
-        'magic': { name: '魔法グマ', cost: 5000, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6 },
-        'mecha': { name: 'メカグマ', cost: 10000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7 },
-        'galaxy': { name: '銀河グマ', cost: 50000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8 },
-        'universe': { name: '宇宙グマ', cost: 100000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9 },
-        'dimension': { name: '次元グマ', cost: 500000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10 },
-        'god': { name: '神グマ', cost: 1000000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11 },
-        'infinity': { name: '無限グマ', cost: 5000000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12 },
-        'fire': { name: '炎グマ', cost: 1500, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13 },
-        'ice': { name: '氷グマ', cost: 1500, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14 },
-        'thunder': { name: '雷グマ', cost: 2500, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15 },
-        'knight': { name: '騎士グマ', cost: 3000, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16 },
-        'king': { name: '王様グマ', cost: 20000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17 }
+        'little': { name: 'こぐま', cost: 50, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1 },
+        'pillar': { name: '柱グマ', cost: 150, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2 },
+        'big': { name: 'おオグマ', cost: 250, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3 },
+        'max': { name: '最大おおぐま', cost: 500, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4 },
+        'ninja': { name: '忍者グマ', cost: 1000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5 },
+        'magic': { name: '魔法グマ', cost: 2500, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6 },
+        'mecha': { name: 'メカグマ', cost: 5000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7 },
+        'galaxy': { name: '銀河グマ', cost: 25000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8 },
+        'universe': { name: '宇宙グマ', cost: 50000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9 },
+        'dimension': { name: '次元グマ', cost: 250000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10 },
+        'god': { name: '神グマ', cost: 500000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11 },
+        'infinity': { name: '無限グマ', cost: 2500000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12 },
+        'fire': { name: '炎グマ', cost: 750, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13 },
+        'ice': { name: '氷グマ', cost: 750, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14 },
+        'thunder': { name: '雷グマ', cost: 1250, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15 },
+        'knight': { name: '騎士グマ', cost: 1500, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16 },
+        'king': { name: '王様グマ', cost: 10000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17 },
+        'angel': { name: '天使グマ', cost: 3000, hp: 800, attack: 200, speed: 2, cooldown: 4000, icon: '👼', id: 18 },
+        'devil': { name: '悪魔グマ', cost: 4000, hp: 1200, attack: 400, speed: 3, cooldown: 4500, icon: '😈', id: 19 },
+        'robot': { name: 'ロボグマ', cost: 6000, hp: 4000, attack: 300, speed: 0.5, cooldown: 8000, icon: '🦾', id: 20 },
+        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21 }
     };
 
     // --- Persistent Data Management ---
@@ -126,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gacha Logic
     document.getElementById('pull-gacha-btn').addEventListener('click', () => {
-        const cost = 100;
+        const cost = 500;
         if (playerData.coins < cost) {
             document.getElementById('gacha-message').textContent = "コインが足りません！";
             return;
@@ -145,8 +149,8 @@ document.addEventListener('DOMContentLoaded', () => {
             playerData.unlockedUnits.push(randomKey);
             document.getElementById('gacha-message').textContent = `NEW! ${unit.name} をゲット！`;
         } else {
-            document.getElementById('gacha-message').textContent = `${unit.name} (入手済み) - 500コイン還元`;
-            playerData.coins += 500; // Refund half
+            document.getElementById('gacha-message').textContent = `${unit.name} (入手済み) - 250コイン還元`;
+            playerData.coins += 250; // Refund half
         }
 
         saveData();
@@ -283,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * Math.pow(1.1, stageId), // Reduced difficulty scaling (1.2 -> 1.1)
+            enemyBaseHp: 1000 * Math.pow(1.25, stageId), // Increased difficulty scaling (1.1 -> 1.25)
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
