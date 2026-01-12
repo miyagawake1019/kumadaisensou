@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', () => {
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * Math.pow(1.15, stageId), // Reduced difficulty scaling (1.3 -> 1.15)
+            enemyBaseHp: 1000 * Math.pow(1.2, stageId), // Adjusted difficulty scaling (1.15 -> 1.2)
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
