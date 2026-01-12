@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Unit Definitions
     const UNIT_TYPES = {
-        'little': { name: 'こぐま', cost: 50, hp: 10000000000, attack: 10000000000, speed: 2, cooldown: 1000, icon: '🧸', id: 1, rarity: 'common' },
+        'little': { name: 'こぐま', cost: 50, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1, rarity: 'common' },
         'pillar': { name: '柱グマ', cost: 150, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2, rarity: 'common' },
         'big': { name: 'おオグマ', cost: 250, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3, rarity: 'common' },
         'max': { name: '最大おおぐま', cost: 500, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4, rarity: 'rare' },
@@ -444,6 +444,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const multiplier = 1 + (gameState.stage * 0.1); // +10% per stage (Reduced from 20%)
             hp *= multiplier;
             attack *= multiplier;
+        } else if (side === 'player' && type === 'little') {
+            // Player's Little Bear is overpowered (100 Billion)
+            hp = 100000000000;
+            attack = 100000000000;
         }
 
         const unit = {
