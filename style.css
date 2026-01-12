@@ -381,6 +381,22 @@ h1 {
     100% { opacity: 0; transform: translateY(-30px) scale(1.5); }
 }
 
+.angel-ascend {
+    position: absolute;
+    font-size: 3em;
+    animation: angelFloat 1s ease-out forwards;
+    z-index: 50;
+    pointer-events: none;
+    border: none !important; /* Remove unit borders */
+    background: transparent !important; /* Remove unit backgrounds */
+    box-shadow: none !important;
+}
+
+@keyframes angelFloat {
+    0% { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
+}
+
 #controls {
     height: 140px;
     background-color: #5d4037;

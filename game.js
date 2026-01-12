@@ -622,11 +622,38 @@ document.addEventListener('DOMContentLoaded', () => {
     function cleanupUnits() {
         gameState.units = gameState.units.filter(unit => {
             if (unit.hp <= 0) {
-                unit.element.remove();
+                handleUnitDeath(unit);
                 return false;
             }
             return true;
         });
+    }
+
+    function handleUnitDeath(unit) {
+        // 1. Deal 100 Damage to nearby enemies
+        // Note: gameState.units contains the *current* state.
+        // We iterate over surviving units to apply damage.
+
+        gameState.units.forEach(target => {
+            if (target.side !== unit.side) {
+                const dist = Math.abs(target.x - unit.x);
+                if (dist < 100) { // Death blast range
+                    target.hp -= 100;
+                    visualizeDamage(target);
+                }
+            }
+        });
+
+        // 2. Visuals - Become Angel
+        unit.element.textContent = '👼';
+        unit.element.classList.add('angel-ascend');
+        // Reset specific unit styles that might conflict or look weird
+        // (optional, but angel text is enough for "angel form")
+
+        // 3. Remove DOM later
+        setTimeout(() => {
+            unit.element.remove();
+        }, 1000);
     }
 
     function checkGameEnd() {
