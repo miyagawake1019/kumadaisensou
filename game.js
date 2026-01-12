@@ -54,7 +54,40 @@ document.addEventListener('DOMContentLoaded', () => {
         'blackhole': { name: 'ブラックホールグマ', cost: 5000000, hp: 800000, attack: 200000, speed: 0.2, cooldown: 50000, icon: '⚫', id: 32, rarity: 'legendary' },
         'virus': { name: 'ウイルスグマ', cost: 3000, hp: 500, attack: 1000, speed: 4, cooldown: 2000, icon: '🦠', id: 33, rarity: 'rare' },
         'glitch': { name: 'グリッチグマ', cost: 15000, hp: 5000, attack: 5000, speed: 8, cooldown: 500, icon: '👾', id: 34, rarity: 'epic' },
-        'ufo': { name: 'UFOグマ', cost: 45000, hp: 12000, attack: 3500, speed: 6, cooldown: 7000, icon: '🛸', id: 35, rarity: 'legendary' }
+        'panda': { name: 'パンダ', cost: 300, hp: 600, attack: 150, speed: 2, cooldown: 1200, icon: '🐼', id: 45, rarity: 'common' },
+        // New Units
+        'leaf': { name: '葉っぱグマ', cost: 100, hp: 300, attack: 50, speed: 4, cooldown: 800, icon: '🍃', id: 46, rarity: 'common' },
+        'flower': { name: '花グマ', cost: 200, hp: 400, attack: 80, speed: 3, cooldown: 1000, icon: '🌼', id: 47, rarity: 'common' },
+        'tree': { name: '木グマ', cost: 500, hp: 2000, attack: 100, speed: 1, cooldown: 3000, icon: '🌳', id: 48, rarity: 'common' },
+        'cactus': { name: 'サボテングマ', cost: 600, hp: 800, attack: 300, speed: 2, cooldown: 1500, icon: '🌵', id: 49, rarity: 'common' },
+        'mushroom': { name: 'キノコグマ', cost: 150, hp: 200, attack: 200, speed: 2, cooldown: 900, icon: '🍄', id: 50, rarity: 'common' },
+        'cat': { name: 'ネコグマ', cost: 400, hp: 500, attack: 250, speed: 5, cooldown: 1200, icon: '🐱', id: 51, rarity: 'common' },
+        'dog': { name: 'イヌグマ', cost: 450, hp: 600, attack: 200, speed: 4, cooldown: 1300, icon: '🐶', id: 52, rarity: 'common' },
+        'rabbit': { name: 'ウサギグマ', cost: 350, hp: 300, attack: 150, speed: 6, cooldown: 1000, icon: '🐰', id: 53, rarity: 'common' },
+        'turtle': { name: 'カメグマ', cost: 800, hp: 3000, attack: 50, speed: 0.5, cooldown: 4000, icon: '🐢', id: 54, rarity: 'common' },
+        'shark': { name: 'サメグマ', cost: 1200, hp: 1000, attack: 600, speed: 4, cooldown: 2000, icon: '🦈', id: 55, rarity: 'rare' },
+        'doctor': { name: 'ドクターグマ', cost: 2000, hp: 800, attack: 100, speed: 2, cooldown: 5000, icon: '🥼', id: 56, rarity: 'rare' },
+        'nurse': { name: 'ナースグマ', cost: 1800, hp: 700, attack: 80, speed: 3, cooldown: 4500, icon: '💉', id: 57, rarity: 'rare' },
+        'police': { name: 'ポリスグマ', cost: 1500, hp: 1200, attack: 400, speed: 3, cooldown: 2500, icon: '👮', id: 58, rarity: 'rare' },
+        'firefighter': { name: '消防士グマ', cost: 1600, hp: 1500, attack: 300, speed: 3, cooldown: 3000, icon: '🚒', id: 59, rarity: 'rare' },
+        'pilot': { name: 'パイロットグマ', cost: 2500, hp: 1000, attack: 800, speed: 5, cooldown: 4000, icon: '👨‍✈️', id: 60, rarity: 'epic' },
+        'astronaut': { name: '宇宙飛行士グマ', cost: 5000, hp: 2000, attack: 1000, speed: 1, cooldown: 6000, icon: '👨‍🚀', id: 61, rarity: 'epic' },
+        'elf': { name: 'エルフグマ', cost: 3000, hp: 900, attack: 700, speed: 4, cooldown: 2500, icon: '🧝', id: 62, rarity: 'epic' },
+        'dwarf': { name: 'ドワーフグマ', cost: 3500, hp: 2500, attack: 600, speed: 2, cooldown: 4000, icon: '🧔', id: 63, rarity: 'epic' },
+        'orc': { name: 'オークグマ', cost: 2800, hp: 3000, attack: 500, speed: 2, cooldown: 3500, icon: '👹', id: 64, rarity: 'rare' },
+        'goblin': { name: 'ゴブリングマ', cost: 800, hp: 400, attack: 300, speed: 5, cooldown: 1000, icon: '👺', id: 65, rarity: 'common' },
+        'slime': { name: 'スライムグマ', cost: 500, hp: 1000, attack: 100, speed: 1, cooldown: 1500, icon: '💧', id: 66, rarity: 'common' },
+        'skeleton': { name: 'ガイコツグマ', cost: 1000, hp: 600, attack: 400, speed: 3, cooldown: 1800, icon: '💀', id: 67, rarity: 'common' },
+        'witch': { name: '魔女グマ', cost: 4500, hp: 800, attack: 1200, speed: 2, cooldown: 5000, icon: '🧙‍♀️', id: 68, rarity: 'epic' },
+        'wizard': { name: '魔法使いグマ', cost: 4500, hp: 800, attack: 1200, speed: 2, cooldown: 5000, icon: '🧙‍♂️', id: 69, rarity: 'epic' },
+        'cyborg': { name: 'サイボーググマ', cost: 8000, hp: 5000, attack: 2000, speed: 3, cooldown: 7000, icon: '🦾', id: 70, rarity: 'legendary' },
+        'drone': { name: 'ドローングマ', cost: 2000, hp: 500, attack: 500, speed: 6, cooldown: 2000, icon: '🚁', id: 71, rarity: 'rare' },
+        'laser': { name: 'レーザーグマ', cost: 6000, hp: 1500, attack: 3000, speed: 1, cooldown: 8000, icon: '🔫', id: 72, rarity: 'epic' },
+        'rocket': { name: 'ロケットグマ', cost: 5000, hp: 1000, attack: 4000, speed: 8, cooldown: 10000, icon: '🚀', id: 73, rarity: 'epic' },
+        'ball': { name: 'ボールグマ', cost: 100, hp: 200, attack: 50, speed: 6, cooldown: 500, icon: '⚽', id: 74, rarity: 'common' },
+        'box': { name: '箱グマ', cost: 200, hp: 1000, attack: 0, speed: 0, cooldown: 2000, icon: '📦', id: 75, rarity: 'common' },
+        'cloud': { name: '雲グマ', cost: 1500, hp: 800, attack: 200, speed: 1, cooldown: 3000, icon: '☁️', id: 76, rarity: 'rare' },
+        'rainbow': { name: '虹グマ', cost: 7777, hp: 2000, attack: 777, speed: 7, cooldown: 7000, icon: '🌈', id: 77, rarity: 'legendary' }
     };
 
     // --- Persistent Data Management ---
@@ -62,6 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let playerData = {
         coins: 1000, // Starting bonus
         unlockedUnits: ['little'], // Default unlocked
+        unitLevels: { 'little': 1 }, // Unit levels
         selectedDeck: ['little'], // Units selected for battle (max 3)
         maxStageCleared: 0 // Track progression
     };
@@ -73,6 +107,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const parsed = JSON.parse(saved);
                 // Merge with default to handle new fields
                 playerData = { ...playerData, ...parsed };
+                // Ensure unitLevels exists for backward compatibility
+                if (!playerData.unitLevels) {
+                    playerData.unitLevels = {};
+                    playerData.unlockedUnits.forEach(u => playerData.unitLevels[u] = 1);
+                }
             } catch (e) {
                 console.error("Save data corrupted", e);
             }
@@ -176,10 +215,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!playerData.unlockedUnits.includes(randomKey)) {
             playerData.unlockedUnits.push(randomKey);
-            document.getElementById('gacha-message').textContent = `NEW! ${unit.name} をゲット！`;
+            playerData.unitLevels[randomKey] = 1;
+            document.getElementById('gacha-message').textContent = `NEW! ${unit.name} をゲット！ (Lv.1)`;
         } else {
-            document.getElementById('gacha-message').textContent = `${unit.name} (入手済み) - 250コイン還元`;
-            playerData.coins += 250; // Refund half
+            // Duplicate: Level Up
+            if (!playerData.unitLevels[randomKey]) playerData.unitLevels[randomKey] = 1;
+            playerData.unitLevels[randomKey]++;
+            const newLevel = playerData.unitLevels[randomKey];
+            document.getElementById('gacha-message').textContent = `${unit.name} かぶり！ レベルアップ！ (Lv.${newLevel})`;
+            // No coin refund, stats increased instead
         }
 
         saveData();
@@ -230,6 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
         Object.keys(UNIT_TYPES).forEach(key => {
             const unit = UNIT_TYPES[key];
             const isUnlocked = playerData.unlockedUnits.includes(key);
+            const level = playerData.unitLevels[key] || 1;
 
             const item = document.createElement('div');
             item.className = 'zukan-item';
@@ -238,7 +283,7 @@ document.addEventListener('DOMContentLoaded', () => {
             item.innerHTML = `
                 <div class="zukan-icon">${isUnlocked ? unit.icon : '?'}</div>
                 <div class="zukan-name">${isUnlocked ? unit.name : '???'}</div>
-                <div class="zukan-cost">${isUnlocked ? '¥' + unit.cost : ''}</div>
+                <div class="zukan-cost">${isUnlocked ? 'Lv.' + level : ''}</div>
             `;
             grid.appendChild(item);
         });
@@ -252,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         playerData.unlockedUnits.forEach(key => {
             const unit = UNIT_TYPES[key];
             const isSelected = playerData.selectedDeck.includes(key);
+            const level = playerData.unitLevels[key] || 1;
 
             const item = document.createElement('div');
             item.className = 'team-item';
@@ -259,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             item.innerHTML = `
                 <div class="zukan-icon">${unit.icon}</div>
-                <div class="zukan-name">${unit.name}</div>
+                <div class="zukan-name">${unit.name} (Lv.${level})</div>
             `;
 
             item.addEventListener('click', () => {
@@ -335,11 +381,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         deck.forEach(key => {
             const unit = UNIT_TYPES[key];
+            const level = playerData.unitLevels[key] || 1;
             const btn = document.createElement('button');
             btn.className = 'summon-btn';
             btn.setAttribute('data-cost', unit.cost);
             btn.setAttribute('data-type', key);
-            btn.innerHTML = `${unit.name}<br>¥${unit.cost}`;
+            btn.innerHTML = `${unit.name} Lv.${level}<br>¥${unit.cost}`;
             controlsDiv.appendChild(btn);
         });
 
@@ -436,16 +483,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function spawnUnit(type, side) {
         const stats = UNIT_TYPES[type];
 
-        // Scale Enemy Stats
+        // Base Stats
         let hp = stats.hp;
         let attack = stats.attack;
 
+        // Apply Level Bonus for Player
+        if (side === 'player') {
+            const level = playerData.unitLevels[type] || 1;
+            if (level > 1) {
+                // +100 HP/Attack per level
+                hp += (level - 1) * 100;
+                attack += (level - 1) * 100;
+            }
+        }
+
+        // Scale Enemy Stats
         if (side === 'enemy') {
             const multiplier = 1 + (gameState.stage * 0.1); // +10% per stage (Reduced from 20%)
             hp *= multiplier;
             attack *= multiplier;
         } else if (side === 'player' && type === 'little') {
-            // Player's Little Bear is overpowered (100 Billion)
+            // Player's Little Bear is overpowered (100 Billion) - Level bonus adds on top but is negligible
             hp = 100000000000;
             attack = 100000000000;
         }

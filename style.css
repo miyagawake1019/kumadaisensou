@@ -260,17 +260,28 @@ h1 {
     justify-content: center;
     align-items: center;
     transition: left 0.1s linear;
+    /* Improved Visibility */
+    font-size: 1.5em;
+    border: 2px solid white;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    background-color: rgba(255, 255, 255, 0.9); /* More opaque */
+    z-index: 20; /* Ensure on top */
 }
 
 .unit.player {
     color: #5d4037;
-    background-color: rgba(255, 255, 255, 0.5);
+    border-color: #4caf50; /* Greenish border for allies */
     border-radius: 50%;
 }
-.unit.enemy { color: #b71c1c; transform: scaleX(-1); }
+.unit.enemy {
+    color: #b71c1c;
+    border-color: #f44336; /* Reddish border for enemies */
+    transform: scaleX(-1);
+    border-radius: 50%;
+}
 
 /* Unit Styles */
-.unit[data-type="little"] { width: 40px; height: 40px; font-size: 1.5em; }
+.unit[data-type="little"] { width: 50px; height: 50px; font-size: 2em; } /* Increased base size */
 .unit[data-type="pillar"] { width: 50px; height: 80px; font-size: 2em; border-radius: 5px; }
 .unit[data-type="big"] { width: 70px; height: 70px; font-size: 2.5em; }
 .unit[data-type="max"] { width: 100px; height: 100px; font-size: 4em; }
@@ -305,6 +316,49 @@ h1 {
 .unit[data-type="virus"] { width: 60px; height: 60px; font-size: 2.5em; background: #c8e6c9; border: 2px dotted green; }
 .unit[data-type="glitch"] { width: 80px; height: 80px; font-size: 3.5em; background: #e1bee7; border: 2px solid magenta; font-family: monospace; }
 .unit[data-type="ufo"] { width: 100px; height: 60px; font-size: 4em; background: silver; border: 2px solid green; border-radius: 50% 50% 20% 20%; }
+.unit[data-type="sniper"] { width: 55px; height: 55px; font-size: 2.5em; border: 2px solid green; }
+.unit[data-type="tank"] { width: 80px; height: 60px; font-size: 3em; border: 3px solid #3e2723; background: #8d6e63; border-radius: 10px; }
+.unit[data-type="vampire"] { width: 60px; height: 60px; font-size: 2.8em; border: 2px solid red; background: #212121; color: white; }
+.unit[data-type="zombie"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid #558b2f; background: #c5e1a5; filter: grayscale(0.5); }
+.unit[data-type="fairy"] { width: 50px; height: 50px; font-size: 2.2em; border: 2px solid pink; background: #fce4ec; box-shadow: 0 0 10px pink; }
+.unit[data-type="giant"] { width: 120px; height: 120px; font-size: 5em; border: 4px solid #5d4037; }
+.unit[data-type="chef"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid #eee; background: white; }
+.unit[data-type="idol"] { width: 65px; height: 65px; font-size: 2.8em; border: 2px solid #e040fb; background: #f3e5f5; animation: pulse 0.8s infinite; }
+.unit[data-type="detective"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid #795548; background: #d7ccc8; }
+.unit[data-type="panda"] { width: 55px; height: 55px; font-size: 2.5em; border: 3px solid black; background: white; }
+/* New Units */
+.unit[data-type="leaf"] { width: 45px; height: 45px; font-size: 2em; border: 2px solid green; background: #e8f5e9; border-radius: 0 50% 0 50%; }
+.unit[data-type="flower"] { width: 50px; height: 50px; font-size: 2.2em; border: 2px solid pink; background: #fffde7; border-radius: 50%; }
+.unit[data-type="tree"] { width: 70px; height: 80px; font-size: 3em; border: 3px solid brown; background: #c8e6c9; border-radius: 10px; }
+.unit[data-type="cactus"] { width: 50px; height: 70px; font-size: 2.5em; border: 2px solid green; background: #a5d6a7; border-radius: 20px; }
+.unit[data-type="mushroom"] { width: 50px; height: 50px; font-size: 2.2em; border: 2px solid red; background: #ffcdd2; border-radius: 50% 50% 10% 10%; }
+.unit[data-type="cat"] { width: 50px; height: 50px; font-size: 2.2em; border: 2px solid orange; background: #fff3e0; border-radius: 30% 30% 50% 50%; }
+.unit[data-type="dog"] { width: 55px; height: 55px; font-size: 2.3em; border: 2px solid brown; background: #efebe9; border-radius: 40%; }
+.unit[data-type="rabbit"] { width: 45px; height: 60px; font-size: 2em; border: 2px solid pink; background: white; border-radius: 40% 40% 50% 50%; }
+.unit[data-type="turtle"] { width: 60px; height: 40px; font-size: 2em; border: 3px solid green; background: #c8e6c9; border-radius: 50%; }
+.unit[data-type="shark"] { width: 80px; height: 50px; font-size: 3em; border: 2px solid blue; background: #e3f2fd; border-radius: 50% 0 0 50%; }
+.unit[data-type="doctor"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid #00acc1; background: white; }
+.unit[data-type="nurse"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid #f48fb1; background: #fce4ec; }
+.unit[data-type="police"] { width: 60px; height: 60px; font-size: 2.5em; border: 3px solid #1a237e; background: #e8eaf6; }
+.unit[data-type="firefighter"] { width: 65px; height: 65px; font-size: 2.8em; border: 3px solid #d32f2f; background: #ffebee; }
+.unit[data-type="pilot"] { width: 60px; height: 60px; font-size: 2.5em; border: 2px solid #1565c0; background: #e3f2fd; }
+.unit[data-type="astronaut"] { width: 70px; height: 70px; font-size: 3em; border: 3px solid white; background: #eeeeee; border-radius: 50%; }
+.unit[data-type="elf"] { width: 55px; height: 80px; font-size: 2.5em; border: 2px solid #66bb6a; background: #f1f8e9; }
+.unit[data-type="dwarf"] { width: 60px; height: 50px; font-size: 2.5em; border: 3px solid #5d4037; background: #d7ccc8; }
+.unit[data-type="orc"] { width: 70px; height: 70px; font-size: 3em; border: 3px solid #2e7d32; background: #a5d6a7; }
+.unit[data-type="goblin"] { width: 45px; height: 45px; font-size: 2em; border: 2px solid #1b5e20; background: #c8e6c9; }
+.unit[data-type="slime"] { width: 50px; height: 40px; font-size: 2em; border: 2px solid #2196f3; background: #bbdefb; border-radius: 50% 50% 10% 10%; opacity: 0.8; }
+.unit[data-type="skeleton"] { width: 55px; height: 80px; font-size: 2.5em; border: 2px solid #bdbdbd; background: white; }
+.unit[data-type="witch"] { width: 65px; height: 80px; font-size: 3em; border: 2px solid #7b1fa2; background: #f3e5f5; }
+.unit[data-type="wizard"] { width: 65px; height: 80px; font-size: 3em; border: 2px solid #1565c0; background: #e3f2fd; }
+.unit[data-type="cyborg"] { width: 75px; height: 75px; font-size: 3.2em; border: 3px solid silver; background: #cfd8dc; clip-path: polygon(10% 0, 100% 0, 100% 90%, 90% 100%, 0 100%, 0 10%); }
+.unit[data-type="drone"] { width: 50px; height: 40px; font-size: 2em; border: 2px solid #455a64; background: white; animation: pulse 0.2s infinite; }
+.unit[data-type="laser"] { width: 70px; height: 70px; font-size: 3em; border: 2px solid red; background: #ffebee; box-shadow: 0 0 15px red; }
+.unit[data-type="rocket"] { width: 50px; height: 80px; font-size: 3em; border: 2px solid orange; background: #fff3e0; border-radius: 50% 50% 10% 10%; }
+.unit[data-type="ball"] { width: 40px; height: 40px; font-size: 2em; border: 2px solid black; background: white; border-radius: 50%; animation: spin 2s linear infinite; }
+.unit[data-type="box"] { width: 50px; height: 50px; font-size: 2.5em; border: 3px solid #795548; background: #d7ccc8; border-radius: 2px; }
+.unit[data-type="cloud"] { width: 70px; height: 50px; font-size: 2.5em; border: 2px solid #90a4ae; background: white; border-radius: 20px; opacity: 0.9; }
+.unit[data-type="rainbow"] { width: 100px; height: 100px; font-size: 4em; border: 4px solid white; background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet); border-radius: 50%; opacity: 0.8; }
 
 @keyframes spin { 100% { transform: rotate(360deg); } }
 
