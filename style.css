@@ -418,6 +418,18 @@ h1 {
     100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
 }
 
+.unit-evolved {
+    border: 3px solid gold !important;
+    box-shadow: 0 0 15px gold, inset 0 0 10px yellow !important;
+    animation: evolvePulse 1.5s infinite alternate;
+    z-index: 30; /* Higher than normal units */
+}
+
+@keyframes evolvePulse {
+    0% { transform: scale(1); filter: brightness(1); }
+    100% { transform: scale(1.1); filter: brightness(1.3); }
+}
+
 #controls {
     height: 140px;
     background-color: #5d4037;

@@ -507,10 +507,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Base Stats
         let hp = stats.hp;
         let attack = stats.attack;
+        let level = 1;
 
         // Apply Level Bonus for Player
         if (side === 'player') {
-            const level = playerData.unitLevels[type] || 1;
+            level = playerData.unitLevels[type] || 1;
             if (level > 1) {
                 // +100 HP/Attack per level
                 hp += (level - 1) * 100;
@@ -539,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             attack: attack,
             speed: stats.speed,
             range: 30, // Attack range
-            element: createUnitElement(type, side)
+            element: createUnitElement(type, side, level)
         };
 
         gameState.units.push(unit);
@@ -547,11 +548,15 @@ document.addEventListener('DOMContentLoaded', () => {
         updateUnitPosition(unit);
     }
 
-    function createUnitElement(type, side) {
+    function createUnitElement(type, side, level = 1) {
         const el = document.createElement('div');
         el.classList.add('unit', side);
         el.setAttribute('data-type', type);
         el.textContent = UNIT_TYPES[type].icon;
+
+        if (side === 'player' && level > 10) {
+            el.classList.add('unit-evolved');
+        }
 
         // Add HP bar? Maybe later.
         return el;
