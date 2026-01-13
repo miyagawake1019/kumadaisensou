@@ -87,7 +87,28 @@ document.addEventListener('DOMContentLoaded', () => {
         'ball': { name: 'ボールグマ', cost: 100, hp: 200, attack: 50, speed: 6, cooldown: 500, icon: '⚽', id: 74, rarity: 'common' },
         'box': { name: '箱グマ', cost: 200, hp: 1000, attack: 0, speed: 0, cooldown: 2000, icon: '📦', id: 75, rarity: 'common' },
         'cloud': { name: '雲グマ', cost: 1500, hp: 800, attack: 200, speed: 1, cooldown: 3000, icon: '☁️', id: 76, rarity: 'rare' },
-        'rainbow': { name: '虹グマ', cost: 7777, hp: 2000, attack: 777, speed: 7, cooldown: 7000, icon: '🌈', id: 77, rarity: 'legendary' }
+        'rainbow': { name: '虹グマ', cost: 7777, hp: 2000, attack: 777, speed: 7, cooldown: 7000, icon: '🌈', id: 77, rarity: 'legendary' },
+        // New Units 2
+        'burger': { name: 'バーガーグマ', cost: 500, hp: 1000, attack: 200, speed: 2, cooldown: 1000, icon: '🍔', id: 78, rarity: 'common' },
+        'pizza': { name: 'ピザグマ', cost: 600, hp: 800, attack: 300, speed: 3, cooldown: 1200, icon: '🍕', id: 79, rarity: 'common' },
+        'sushi': { name: '寿司グマ', cost: 1000, hp: 500, attack: 500, speed: 5, cooldown: 1500, icon: '🍣', id: 80, rarity: 'rare' },
+        'donut': { name: 'ドーナツグマ', cost: 400, hp: 600, attack: 150, speed: 4, cooldown: 800, icon: '🍩', id: 81, rarity: 'common' },
+        'cake': { name: 'ケーキグマ', cost: 800, hp: 1200, attack: 100, speed: 1, cooldown: 2000, icon: '🍰', id: 82, rarity: 'common' },
+        'baseball': { name: '野球グマ', cost: 2000, hp: 1500, attack: 600, speed: 3, cooldown: 2500, icon: '⚾', id: 83, rarity: 'rare' },
+        'soccer': { name: 'サッカーグマ', cost: 2200, hp: 1200, attack: 700, speed: 5, cooldown: 2800, icon: '⚽', id: 84, rarity: 'rare' },
+        'tennis': { name: 'テニスグマ', cost: 1800, hp: 1000, attack: 500, speed: 6, cooldown: 2200, icon: '🎾', id: 85, rarity: 'rare' },
+        'basketball': { name: 'バスケグマ', cost: 2500, hp: 1800, attack: 800, speed: 4, cooldown: 3000, icon: '🏀', id: 86, rarity: 'epic' },
+        'golf': { name: 'ゴルフグマ', cost: 1500, hp: 900, attack: 400, speed: 2, cooldown: 2000, icon: '⛳', id: 87, rarity: 'common' },
+        'guitar': { name: 'ギターグマ', cost: 3000, hp: 1200, attack: 1000, speed: 3, cooldown: 3500, icon: '🎸', id: 88, rarity: 'epic' },
+        'piano': { name: 'ピアノグマ', cost: 3500, hp: 2000, attack: 800, speed: 1, cooldown: 4000, icon: '🎹', id: 89, rarity: 'epic' },
+        'drum': { name: 'ドラムグマ', cost: 2800, hp: 2500, attack: 500, speed: 2, cooldown: 3000, icon: '🥁', id: 90, rarity: 'rare' },
+        'violin': { name: 'バイオリングマ', cost: 3200, hp: 1000, attack: 1200, speed: 3, cooldown: 3800, icon: '🎻', id: 91, rarity: 'epic' },
+        'trumpet': { name: 'ラッパグマ', cost: 2600, hp: 1500, attack: 600, speed: 4, cooldown: 3200, icon: '🎺', id: 92, rarity: 'rare' },
+        'mummy': { name: 'ミイラグマ', cost: 1200, hp: 3000, attack: 200, speed: 1, cooldown: 2500, icon: '🤕', id: 93, rarity: 'common' },
+        'werewolf': { name: '狼男グマ', cost: 4000, hp: 2500, attack: 1500, speed: 6, cooldown: 4500, icon: '🐺', id: 94, rarity: 'epic' },
+        'reaper': { name: '死神グマ', cost: 10000, hp: 500, attack: 10000, speed: 5, cooldown: 10000, icon: '💀', id: 95, rarity: 'legendary' },
+        'bat': { name: 'コウモリグマ', cost: 800, hp: 400, attack: 300, speed: 7, cooldown: 1000, icon: '🦇', id: 96, rarity: 'common' },
+        'metal': { name: 'メタルグマ', cost: 50000, hp: 100, attack: 100, speed: 10, cooldown: 5000, icon: '⚙️', id: 97, rarity: 'legendary' }
     };
 
     // --- Persistent Data Management ---
