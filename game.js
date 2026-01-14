@@ -392,6 +392,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Clear Lane
         lane.innerHTML = '';
 
+        // Apply Rainbow Road Theme
+        const battleField = document.getElementById('battle-field');
+        if (stageId > 50) {
+            battleField.classList.add('rainbow-road');
+        } else {
+            battleField.classList.remove('rainbow-road');
+        }
+
         // Generate Controls based on Selected Deck
         controlsDiv.innerHTML = '';
         // Use default if nothing selected (shouldn't happen due to initialization logic)

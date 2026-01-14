@@ -418,6 +418,18 @@ h1 {
     100% { opacity: 0; transform: translateY(-50px) scale(1.2); }
 }
 
+.rainbow-road {
+    background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet, red) !important;
+    background-size: 400% 400% !important;
+    animation: rainbowScroll 5s ease infinite !important;
+}
+
+@keyframes rainbowScroll {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
 .unit-evolved {
     border: 3px solid gold !important;
     box-shadow: 0 0 15px gold, inset 0 0 10px yellow !important;
