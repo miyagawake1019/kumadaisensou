@@ -337,7 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
             grid.appendChild(item);
         });
 
-        document.getElementById('team-count').textContent = `${playerData.selectedDeck.length} / 3`;
+        document.getElementById('team-count').textContent = `${playerData.selectedDeck.length} / 10`;
     }
 
     function toggleUnitSelection(key) {
@@ -349,12 +349,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } else {
             // Select
-            if (playerData.selectedDeck.length < 3) {
+            if (playerData.selectedDeck.length < 10) {
                 playerData.selectedDeck.push(key);
             } else {
-                // Already at 3, maybe alert or replace?
-                // For simplicity: alert
-                alert("3匹までしか選べません！(Max 3 units)");
+                // Already at limit
+                alert("10匹までしか選べません！(Max 10 units)");
             }
         }
         saveData();
