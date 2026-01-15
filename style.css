@@ -709,3 +709,154 @@ h1 {
     transform: rotate(5deg);
     opacity: 0.8;
 }
+
+/* Knockback Animation */
+.unit.knockback {
+    transition: left 0.1s ease-out;
+    filter: brightness(2) !important; /* Flash White */
+    opacity: 0.7;
+}
+
+/* Tower Visuals - Overriding Base Emojis */
+.base {
+    width: 100px;
+    height: 150px;
+    background: none; /* Remove previous if any */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 0; /* Hide emoji text */
+}
+
+/* Player Tower - Bear Tower */
+#player-base::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 80px;
+    height: 120px;
+    background: linear-gradient(to bottom, #8d6e63, #5d4037);
+    border: 4px solid #3e2723;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+}
+
+#player-base::after {
+    content: ''; /* Bear Head on top */
+    position: absolute;
+    bottom: 110px;
+    width: 60px;
+    height: 50px;
+    background-color: #8d6e63;
+    border: 4px solid #3e2723;
+    border-radius: 50% 50% 10% 10%;
+}
+
+/* Enemy Tower - Generic Evil Tower */
+#enemy-base::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 70px;
+    height: 140px;
+    background: linear-gradient(to bottom, #cfd8dc, #546e7a);
+    border: 4px solid #263238;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+}
+
+#enemy-base::after {
+    content: ''; /* Spike/Gem on top */
+    position: absolute;
+    bottom: 130px;
+    width: 40px;
+    height: 40px;
+    background-color: #f44336;
+    transform: rotate(45deg);
+    border: 2px solid #b71c1c;
+    box-shadow: 0 0 10px red;
+    animation: pulse 2s infinite;
+}
+
+/* Base HP Text Correction */
+.base-hp {
+    font-size: 14px; /* Restore font size */
+    z-index: 20;
+    top: -40px;
+}
+
+/* Cooldown Overlay */
+.summon-btn {
+    position: relative;
+    overflow: hidden;
+    /* Ensure content is above overlay */
+    z-index: 1;
+}
+
+.cooldown-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0%; /* Starts empty */
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: -1; /* Behind text */
+    pointer-events: none;
+}
+
+/* Power Up Screen Styles */
+.powerup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 90%;
+    max-width: 600px;
+    overflow-y: auto;
+    padding-bottom: 20px;
+}
+
+.powerup-item {
+    display: flex;
+    align-items: center;
+    background-color: #e3f2fd;
+    border: 2px solid #2196f3;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.powerup-icon {
+    font-size: 3em;
+    margin-right: 15px;
+    width: 60px;
+    text-align: center;
+}
+
+.powerup-info {
+    flex-grow: 1;
+}
+
+.powerup-name {
+    font-weight: bold;
+    font-size: 1.2em;
+    color: #0d47a1;
+}
+
+.powerup-desc {
+    color: #546e7a;
+    font-size: 0.9em;
+}
+
+.powerup-buy-btn {
+    background-color: #ffca28;
+    border: 2px solid #ff6f00;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-weight: bold;
+    color: #3e2723;
+    cursor: pointer;
+    min-width: 100px;
+}
+
+.powerup-buy-btn:hover {
+    background-color: #ffb300;
+}

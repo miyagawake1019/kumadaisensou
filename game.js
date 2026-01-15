@@ -89,9 +89,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'cloud': { name: '雲グマ', cost: 1500, hp: 800, attack: 200, speed: 1, cooldown: 3000, icon: '☁️', id: 76, rarity: 'rare' },
         'rainbow': { name: '虹グマ', cost: 7777, hp: 2000, attack: 777, speed: 7, cooldown: 7000, icon: '🌈', id: 77, rarity: 'legendary' },
         // Battle Cats Parody Units (Bear Mark)
-        'neko_kuma': { name: 'ネコグマ', cost: 75, hp: 100, attack: 20, speed: 3, cooldown: 500, icon: '🐱', id: 201, rarity: 'rare' },
-        'tank_kuma': { name: 'タンクネコグマ', cost: 150, hp: 400, attack: 5, speed: 1.5, cooldown: 500, icon: '🐱', id: 202, rarity: 'rare' },
-        'battle_kuma': { name: 'バトルネコグマ', cost: 300, hp: 200, attack: 80, speed: 3, cooldown: 600, icon: '🐱', id: 203, rarity: 'rare' },
+        'neko_kuma': { name: 'ネコグマ', cost: 75, hp: 100, attack: 20, speed: 3, cooldown: 500, icon: '🐱', id: 201, rarity: 'rare', kb: 3 },
+        'tank_kuma': { name: 'タンクネコグマ', cost: 150, hp: 400, attack: 5, speed: 1.5, cooldown: 500, icon: '🐱', id: 202, rarity: 'rare', kb: 1 },
+        'battle_kuma': { name: 'バトルネコグマ', cost: 300, hp: 200, attack: 80, speed: 3, cooldown: 600, icon: '🐱', id: 203, rarity: 'rare', kb: 3 },
         'kimokawa_kuma': { name: 'キモネコグマ', cost: 400, hp: 250, attack: 250, speed: 2, cooldown: 800, icon: '🦵', id: 204, rarity: 'rare' },
         'ushi_kuma': { name: 'ウシネコグマ', cost: 500, hp: 300, attack: 50, speed: 10, cooldown: 400, icon: '🐮', id: 205, rarity: 'rare' },
         'tori_kuma': { name: 'トリネコグマ', cost: 550, hp: 150, attack: 200, speed: 3, cooldown: 600, icon: '🐦', id: 206, rarity: 'rare' },
@@ -134,7 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
         unlockedUnits: ['little'], // Default unlocked
         unitLevels: { 'little': 1 }, // Unit levels
         selectedDeck: ['little'], // Units selected for battle (max 3)
-        maxStageCleared: 0 // Track progression
+        maxStageCleared: 0, // Track progression
+        // New Power Up Levels (Default 1)
+        baseHpLevel: 1,
+        workerRateLevel: 1,
+        cannonPowerLevel: 1
     };
 
     function loadData() {
@@ -144,14 +148,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 const parsed = JSON.parse(saved);
                 // Merge with default to handle new fields
                 playerData = { ...playerData, ...parsed };
-                // Ensure unitLevels exists for backward compatibility
+
+                // Backwards compatibility defaults
                 if (!playerData.unitLevels) {
                     playerData.unitLevels = {};
                     playerData.unlockedUnits.forEach(u => playerData.unitLevels[u] = 1);
                 }
-                // Ensure tickets exist
                 if (playerData.normalTickets === undefined) playerData.normalTickets = 5;
                 if (playerData.rareTickets === undefined) playerData.rareTickets = 1;
+
+                // Power Ups
+                if (!playerData.baseHpLevel) playerData.baseHpLevel = 1;
+                if (!playerData.workerRateLevel) playerData.workerRateLevel = 1;
+                if (!playerData.cannonPowerLevel) playerData.cannonPowerLevel = 1;
+
             } catch (e) {
                 console.error("Save data corrupted", e);
             }
@@ -181,6 +191,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gachaScreen = document.getElementById('gacha-screen');
     const zukanScreen = document.getElementById('zukan-screen');
     const teamSelectScreen = document.getElementById('team-select-screen');
+    const powerUpScreen = document.getElementById('powerup-screen');
 
     // --- Event Listeners ---
 
@@ -188,6 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('menu-start-btn').addEventListener('click', () => {
         mainMenuScreen.style.display = 'none';
         stageSelectScreen.style.display = 'flex';
+    });
+
+    document.getElementById('menu-powerup-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        powerUpScreen.style.display = 'flex';
+        renderPowerUps();
     });
 
     document.getElementById('menu-gacha-btn').addEventListener('click', () => {
@@ -228,6 +245,68 @@ document.addEventListener('DOMContentLoaded', () => {
         teamSelectScreen.style.display = 'none';
         mainMenuScreen.style.display = 'flex';
     });
+
+    document.getElementById('back-to-menu-from-powerup-btn').addEventListener('click', () => {
+        powerUpScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
+    // Power Up Screen Logic
+    function renderPowerUps() {
+        const list = document.getElementById('powerup-list');
+        list.innerHTML = '';
+
+        const upgrades = [
+            { id: 'baseHp', name: 'お城の体力 (Base HP)', level: playerData.baseHpLevel, desc: '+1000 HP / Lv' },
+            { id: 'workerRate', name: '働きネコ効率 (Income Speed)', level: playerData.workerRateLevel, desc: '+10% Speed / Lv' },
+            { id: 'cannonPower', name: 'くまじゅう攻撃力 (Cannon Atk)', level: playerData.cannonPowerLevel, desc: '+500 Atk / Lv' }
+        ];
+
+        upgrades.forEach(up => {
+            const item = document.createElement('div');
+            item.className = 'powerup-item';
+
+            const cost = up.level * 2000;
+
+            item.innerHTML = `
+                <div class="powerup-icon">💪</div>
+                <div class="powerup-info">
+                    <div class="powerup-name">${up.name} Lv.${up.level}</div>
+                    <div class="powerup-desc">${up.desc}</div>
+                </div>
+                <button class="powerup-buy-btn" data-id="${up.id}" data-cost="${cost}">
+                    UP<br>¥${cost}
+                </button>
+            `;
+
+            list.appendChild(item);
+        });
+
+        // Add Event Listeners
+        document.querySelectorAll('.powerup-buy-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-id');
+                const cost = parseInt(btn.getAttribute('data-cost'));
+
+                if (playerData.coins >= cost) {
+                    if (confirm(`${cost}コインでレベルアップしますか？`)) {
+                        playerData.coins -= cost;
+
+                        // Update Data
+                        if (id === 'baseHp') playerData.baseHpLevel++;
+                        else if (id === 'workerRate') playerData.workerRateLevel++;
+                        else if (id === 'cannonPower') playerData.cannonPowerLevel++;
+
+                        saveData();
+                        updateGlobalCoinsUI();
+                        renderPowerUps(); // Re-render to update level/cost
+                    }
+                } else {
+                    alert("コインが足りません！");
+                }
+            });
+        });
+    }
 
     // Reset All Data
     document.getElementById('reset-all-btn').addEventListener('click', () => {
@@ -501,6 +580,8 @@ ATK: ${unit.attack + (level-1)*100}
 
     function startGame(stageId, stageName) {
         // Reset State
+        const baseHp = 1000 + ((playerData.baseHpLevel - 1) * 1000);
+
         gameState = {
             money: 0,
             maxMoney: 1000, // Initial Cap
@@ -508,7 +589,7 @@ ATK: ${unit.attack + (level-1)*100}
             cannonCharge: 0,
             stage: stageId,
             units: [],
-            playerBaseHp: 1000,
+            playerBaseHp: baseHp,
             enemyBaseHp: 1000 * Math.pow(1.2, stageId),
             lastMoneyUpdate: Date.now(),
             gameOver: false,
@@ -543,7 +624,10 @@ ATK: ${unit.attack + (level-1)*100}
             btn.className = 'summon-btn';
             btn.setAttribute('data-cost', unit.cost);
             btn.setAttribute('data-type', key);
-            btn.innerHTML = `${unit.name} Lv.${level}<br>¥${unit.cost}`;
+            btn.innerHTML = `
+                <div class="cooldown-overlay"></div>
+                ${unit.name} Lv.${level}<br>¥${unit.cost}
+            `;
             controlsDiv.appendChild(btn);
         });
 
@@ -571,7 +655,9 @@ ATK: ${unit.attack + (level-1)*100}
         const now = Date.now();
 
         // 1. Money Accumulation (Passive income)
-        if (now - gameState.lastMoneyUpdate > 30) {
+        const incomeInterval = Math.max(5, 30 - ((playerData.workerRateLevel - 1) * 2)); // Faster with level
+
+        if (now - gameState.lastMoneyUpdate > incomeInterval) {
             // Calculate rate based on Worker Level
             // Base: 1000. Each level adds 500.
             const income = 1000 + (gameState.workerLevel - 1) * 500 + (gameState.stage * 100);
@@ -681,6 +767,8 @@ ATK: ${unit.attack + (level-1)*100}
             attack = 100000000000;
         }
 
+        const kbCount = stats.kb || 3;
+
         const unit = {
             id: Math.random().toString(36).substr(2, 9),
             type: type,
@@ -691,6 +779,11 @@ ATK: ${unit.attack + (level-1)*100}
             attack: attack,
             speed: stats.speed,
             range: 30, // Attack range
+            // Knockback Logic
+            kbThreshold: hp / kbCount,
+            currentKbDamage: 0,
+            isInvincible: false,
+            // Visual
             element: createUnitElement(type, side, level)
         };
 
@@ -715,6 +808,7 @@ ATK: ${unit.attack + (level-1)*100}
 
     function moveUnits() {
         gameState.units.forEach(unit => {
+            if (unit.isInvincible) return; // Don't move if being knocked back
             if (unit.isFighting) return; // Don't move if fighting
 
             if (unit.side === 'player') {
@@ -738,6 +832,34 @@ ATK: ${unit.attack + (level-1)*100}
         unit.element.style.left = unit.x + 'px';
     }
 
+    function triggerKnockback(unit) {
+        if (unit.isInvincible) return;
+
+        unit.isInvincible = true;
+        unit.currentKbDamage = 0; // Reset threshold tracker
+
+        // Push Back
+        const pushDist = 100;
+        if (unit.side === 'player') {
+            unit.x -= pushDist;
+            if (unit.x < PLAYER_BASE_X) unit.x = PLAYER_BASE_X;
+        } else {
+            unit.x += pushDist;
+            if (unit.x > ENEMY_BASE_X) unit.x = ENEMY_BASE_X;
+        }
+
+        updateUnitPosition(unit);
+
+        // Visual
+        unit.element.classList.add('knockback');
+
+        // Recovery
+        setTimeout(() => {
+            unit.isInvincible = false;
+            if (unit.element) unit.element.classList.remove('knockback');
+        }, 500); // 0.5s stun/invincibility
+    }
+
     function resolveCombat() {
         // Reset fighting state
         gameState.units.forEach(u => u.isFighting = false);
@@ -746,21 +868,32 @@ ATK: ${unit.attack + (level-1)*100}
         for (let i = 0; i < gameState.units.length; i++) {
             const u1 = gameState.units[i];
 
+            // Skip if stunned
+            if (u1.isInvincible) continue;
+
             // Check collision with opposing units
             for (let j = 0; j < gameState.units.length; j++) {
                 if (i === j) continue;
                 const u2 = gameState.units[j];
 
-                if (u1.side !== u2.side) {
+                if (u1.side !== u2.side && !u2.isInvincible) {
                     // Check distance
                     const dist = Math.abs(u1.x - u2.x);
                     if (dist < 40) { // Collision threshold
                         u1.isFighting = true;
                         // Attack
                         if (!u1.lastAttack || Date.now() - u1.lastAttack > 1000) {
+                            // Apply Damage
                             u2.hp -= u1.attack;
+                            u2.currentKbDamage += u1.attack;
+
                             u1.lastAttack = Date.now();
                             visualizeDamage(u2);
+
+                            // Check Knockback
+                            if (u2.currentKbDamage >= u2.kbThreshold) {
+                                triggerKnockback(u2);
+                            }
 
                             // Fire Effect for Little Bear
                             if (u1.type === 'little') {
@@ -962,9 +1095,11 @@ ATK: ${unit.attack + (level-1)*100}
             gameState.cannonCharge = 0;
 
             // Effect: Damage all enemies and push them back
+            const cannonDmg = 500 + ((playerData.cannonPowerLevel - 1) * 500);
+
             gameState.units.forEach(unit => {
                 if (unit.side === 'enemy') {
-                    unit.hp -= 500; // Base damage
+                    unit.hp -= cannonDmg; // Base damage
                     unit.x += 100; // Push back
                     visualizeDamage(unit);
                 }
