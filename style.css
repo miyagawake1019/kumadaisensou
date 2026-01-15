@@ -486,3 +486,65 @@ h1 {
     cursor: pointer;
     z-index: 100;
 }
+
+#system-controls {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    background-color: #4e342e; /* Slightly darker than controls */
+    border-bottom: 2px solid #3e2723;
+}
+
+.system-btn {
+    flex: 1;
+    margin: 0 5px;
+    padding: 10px;
+    height: 60px;
+    border-radius: 5px;
+    border: 3px solid #333;
+    font-weight: bold;
+    cursor: pointer;
+    background-color: #bdbdbd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 0.9em;
+}
+
+.system-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.system-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+#upgrade-worker-btn {
+    background-color: #81c784; /* Greenish */
+    border-color: #2e7d32;
+    color: #1b5e20;
+}
+
+#fire-cannon-btn {
+    background-color: #cfd8dc;
+    border-color: #546e7a;
+    color: #37474f;
+}
+
+#fire-cannon-btn.ready {
+    background: linear-gradient(45deg, #2196f3, #64b5f6);
+    border-color: #0d47a1;
+    color: white;
+    animation: pulse 1s infinite;
+}
+
+.cannon-blast {
+    animation: fadeOut 0.2s forwards;
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; }
+}

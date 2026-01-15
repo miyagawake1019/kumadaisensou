@@ -265,6 +265,13 @@ document.addEventListener('DOMContentLoaded', () => {
         stageSelectScreen.style.display = 'flex';
     });
 
+    // System Buttons
+    const upgradeWorkerBtn = document.getElementById('upgrade-worker-btn');
+    if (upgradeWorkerBtn) upgradeWorkerBtn.addEventListener('click', upgradeWorker);
+
+    const fireCannonBtn = document.getElementById('fire-cannon-btn');
+    if (fireCannonBtn) fireCannonBtn.addEventListener('click', fireCannon);
+
     // Summon Buttons (Delegation)
     const controlsDiv = document.getElementById('controls');
     controlsDiv.addEventListener('click', (e) => {
@@ -365,6 +372,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameLoopId;
     let gameState = {
         money: 0,
+        maxMoney: 1000,
+        workerLevel: 1,
+        cannonCharge: 0,
         stage: 1,
         units: [],
         playerBaseHp: 1000,
@@ -379,15 +389,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset State
         gameState = {
             money: 0,
+            maxMoney: 1000, // Initial Cap
+            workerLevel: 1,
+            cannonCharge: 0,
             stage: stageId,
             units: [],
             playerBaseHp: 1000,
-            enemyBaseHp: 1000 * Math.pow(1.2, stageId), // Adjusted difficulty scaling (1.15 -> 1.2)
+            enemyBaseHp: 1000 * Math.pow(1.2, stageId),
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
             enemySpawnTimer: Date.now()
         };
+
+        updateSystemButtons();
 
         // Clear Lane
         lane.innerHTML = '';
@@ -442,8 +457,23 @@ document.addEventListener('DOMContentLoaded', () => {
         const now = Date.now();
 
         // 1. Money Accumulation (Passive income)
-        if (now - gameState.lastMoneyUpdate > 30) { // Every 0.03 seconds (Insanely fast)
-            gameState.money += 1000 + (gameState.stage * 100); // Even bigger amount
+        if (now - gameState.lastMoneyUpdate > 30) {
+            // Calculate rate based on Worker Level
+            // Base: 1000. Each level adds 500.
+            const income = 1000 + (gameState.workerLevel - 1) * 500 + (gameState.stage * 100);
+
+            if (gameState.money < gameState.maxMoney) {
+                gameState.money += income;
+                if (gameState.money > gameState.maxMoney) gameState.money = gameState.maxMoney;
+            }
+
+            // Cannon Charge
+            if (gameState.cannonCharge < 100) {
+                gameState.cannonCharge += 0.5; // Charge up
+                if (gameState.cannonCharge > 100) gameState.cannonCharge = 100;
+                updateCannonUI();
+            }
+
             gameState.lastMoneyUpdate = now;
             updateMoneyUI();
         }
@@ -745,7 +775,94 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateMoneyUI() {
-        moneyDisplay.textContent = gameState.money;
+        moneyDisplay.textContent = `${Math.floor(gameState.money)} / ${gameState.maxMoney}`;
+        updateSystemButtons();
+    }
+
+    function updateCannonUI() {
+        const btn = document.getElementById('fire-cannon-btn');
+        if (btn) {
+            const charge = Math.floor(gameState.cannonCharge);
+            btn.textContent = `にゃんこ砲\n${charge}%`;
+            // Visual feedback
+            btn.style.background = `linear-gradient(to right, #99ff99 ${charge}%, #eee ${charge}%)`;
+
+            if (charge >= 100) {
+                btn.classList.add('ready');
+                btn.disabled = false;
+            } else {
+                btn.classList.remove('ready');
+                btn.disabled = true;
+            }
+        }
+    }
+
+    function updateSystemButtons() {
+        // Worker Upgrade Button
+        const workerBtn = document.getElementById('upgrade-worker-btn');
+        if (workerBtn) {
+            const nextLevel = gameState.workerLevel + 1;
+            const cost = nextLevel * 500; // Example scaling
+            workerBtn.innerHTML = `働きネコ Lv.${gameState.workerLevel}<br>UP: ¥${cost}`;
+
+            if (gameState.money >= cost && gameState.workerLevel < 8) { // Max level 8
+                workerBtn.disabled = false;
+                workerBtn.style.opacity = '1';
+            } else {
+                workerBtn.disabled = true;
+                workerBtn.style.opacity = '0.6';
+                if (gameState.workerLevel >= 8) {
+                    workerBtn.innerHTML = `働きネコ<br>MAX`;
+                }
+            }
+        }
+    }
+
+    function upgradeWorker() {
+        const nextLevel = gameState.workerLevel + 1;
+        const cost = nextLevel * 500;
+
+        if (gameState.workerLevel < 8 && gameState.money >= cost) {
+            gameState.money -= cost;
+            gameState.workerLevel++;
+            gameState.maxMoney += 1000; // Increase cap
+            updateMoneyUI();
+        }
+    }
+
+    function fireCannon() {
+        if (gameState.cannonCharge >= 100) {
+            gameState.cannonCharge = 0;
+
+            // Effect: Damage all enemies and push them back
+            gameState.units.forEach(unit => {
+                if (unit.side === 'enemy') {
+                    unit.hp -= 500; // Base damage
+                    unit.x += 100; // Push back
+                    visualizeDamage(unit);
+                }
+            });
+
+            // Visual Effect
+            const battleField = document.getElementById('battle-field');
+            if (battleField) {
+                const cannonEffect = document.createElement('div');
+                cannonEffect.className = 'cannon-blast';
+                // Inline styles for now, can move to CSS later
+                cannonEffect.style.position = 'absolute';
+                cannonEffect.style.left = '0';
+                cannonEffect.style.top = '0';
+                cannonEffect.style.width = '100%';
+                cannonEffect.style.height = '100%';
+                cannonEffect.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
+                cannonEffect.style.zIndex = '10';
+                cannonEffect.style.pointerEvents = 'none';
+                battleField.appendChild(cannonEffect);
+                setTimeout(() => cannonEffect.remove(), 200);
+            }
+
+            updateCannonUI();
+        }
     }
 
     function updateBaseHpUI() {
