@@ -548,3 +548,69 @@ h1 {
 @keyframes fadeOut {
     to { opacity: 0; }
 }
+
+/* Gacha Controls Layout */
+.gacha-controls {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.gacha-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 200px;
+}
+
+.gacha-box h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.5em;
+    color: #5d4037;
+}
+
+.gacha-box p {
+    font-weight: bold;
+    color: #424242;
+    margin-bottom: 15px;
+}
+
+.gacha-btn {
+    width: 100%;
+    font-size: 1.2em;
+    padding: 10px;
+    border: 2px solid;
+}
+
+.gacha-btn.normal {
+    background-color: #bbdefb;
+    border-color: #1976d2;
+    color: #0d47a1;
+}
+
+.gacha-btn.normal:hover {
+    background-color: #90caf9;
+}
+
+.gacha-btn.rare {
+    background: linear-gradient(45deg, #ffd700, #ffecb3, #ffd700);
+    border-color: #ffa000;
+    color: #3e2723;
+    animation: shine 2s infinite;
+}
+
+.gacha-btn.rare:hover {
+    filter: brightness(1.1);
+}
+
+@keyframes shine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}

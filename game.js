@@ -115,6 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const STORAGE_KEY = 'kuma_wars_data';
     let playerData = {
         coins: 1000, // Starting bonus
+        normalTickets: 5, // Start with some tickets
+        rareTickets: 1,  // Start with one rare ticket
         unlockedUnits: ['little'], // Default unlocked
         unitLevels: { 'little': 1 }, // Unit levels
         selectedDeck: ['little'], // Units selected for battle (max 3)
@@ -133,6 +135,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     playerData.unitLevels = {};
                     playerData.unlockedUnits.forEach(u => playerData.unitLevels[u] = 1);
                 }
+                // Ensure tickets exist
+                if (playerData.normalTickets === undefined) playerData.normalTickets = 5;
+                if (playerData.rareTickets === undefined) playerData.rareTickets = 1;
             } catch (e) {
                 console.error("Save data corrupted", e);
             }
@@ -147,8 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateGlobalCoinsUI() {
-        const el = document.getElementById('player-coins');
-        if (el) el.textContent = playerData.coins;
+        const coinEl = document.getElementById('player-coins');
+        if (coinEl) coinEl.textContent = playerData.coins;
+
+        const normalTicketEl = document.getElementById('player-normal-tickets');
+        if (normalTicketEl) normalTicketEl.textContent = playerData.normalTickets;
+
+        const rareTicketEl = document.getElementById('player-rare-tickets');
+        if (rareTicketEl) rareTicketEl.textContent = playerData.rareTickets;
     }
 
     // --- Screens ---
@@ -204,30 +215,49 @@ document.addEventListener('DOMContentLoaded', () => {
         mainMenuScreen.style.display = 'flex';
     });
 
-    // Gacha Logic
-    document.getElementById('pull-gacha-btn').addEventListener('click', () => {
-        const cost = 500;
-        if (playerData.coins < cost) {
-            document.getElementById('gacha-message').textContent = "コインが足りません！";
-            return;
+    // Reset All Data
+    document.getElementById('reset-all-btn').addEventListener('click', () => {
+        if (confirm("本当にデータを全部消して最初からにしますか？ (Are you sure you want to reset all data?)")) {
+            localStorage.removeItem(STORAGE_KEY);
+            playerData = {
+                coins: 1000,
+                unlockedUnits: ['little'],
+                unitLevels: { 'little': 1 },
+                selectedDeck: ['little'],
+                maxStageCleared: 0
+            };
+            saveData();
+            loadData();
+            alert("データをリセットしました。 (Data reset complete.)");
         }
+    });
 
-        playerData.coins -= cost;
-
+    // Gacha Logic - Helper
+    function executeGacha(poolType) {
         // Weighted Random Selection
         const unitKeys = Object.keys(UNIT_TYPES);
         let weightedPool = [];
 
         unitKeys.forEach(key => {
             const unit = UNIT_TYPES[key];
-            let weight = 1;
-            if (unit.rarity === 'common') weight = 50;
-            else if (unit.rarity === 'rare') weight = 20;
-            else if (unit.rarity === 'epic') weight = 5;
-            else if (unit.rarity === 'legendary') weight = 1;
+            let weight = 0;
+
+            if (poolType === 'normal') {
+                if (unit.rarity === 'common') weight = 60;
+                else if (unit.rarity === 'rare') weight = 30;
+                else if (unit.rarity === 'epic') weight = 9;
+                else if (unit.rarity === 'legendary') weight = 1;
+            } else if (poolType === 'rare') {
+                if (unit.rarity === 'common') weight = 0; // No common
+                else if (unit.rarity === 'rare') weight = 10;
+                else if (unit.rarity === 'epic') weight = 60;
+                else if (unit.rarity === 'legendary') weight = 30; // High chance for legendary
+            }
 
             for(let i=0; i<weight; i++) weightedPool.push(key);
         });
+
+        if (weightedPool.length === 0) return null; // Should not happen
 
         const randomKey = weightedPool[Math.floor(Math.random() * weightedPool.length)];
         const unit = UNIT_TYPES[randomKey];
@@ -244,11 +274,33 @@ document.addEventListener('DOMContentLoaded', () => {
             playerData.unitLevels[randomKey]++;
             const newLevel = playerData.unitLevels[randomKey];
             document.getElementById('gacha-message').textContent = `${unit.name} かぶり！ レベルアップ！ (Lv.${newLevel})`;
-            // No coin refund, stats increased instead
         }
 
         saveData();
+    }
+
+    // Normal Gacha Listener
+    document.getElementById('pull-gacha-btn').addEventListener('click', () => {
+        if (playerData.normalTickets < 1) {
+            document.getElementById('gacha-message').textContent = "チケットが足りません！";
+            return;
+        }
+        playerData.normalTickets--;
+        executeGacha('normal');
     });
+
+    // Rare Gacha Listener
+    const rareGachaBtn = document.getElementById('pull-rare-gacha-btn');
+    if (rareGachaBtn) {
+        rareGachaBtn.addEventListener('click', () => {
+            if (playerData.rareTickets < 1) {
+                document.getElementById('gacha-message').textContent = "レアチケットが足りません！";
+                return;
+            }
+            playerData.rareTickets--;
+            executeGacha('rare');
+        });
+    }
 
     // Stage Selection
     document.querySelectorAll('.stage-btn').forEach(btn => {
@@ -734,9 +786,22 @@ document.addEventListener('DOMContentLoaded', () => {
         let message = isWin ? "勝利！ (Victory!)" : "敗北... (Defeat...)";
 
         if (isWin) {
-            // Award Coins - significantly increased
-            const reward = 1000 * gameState.stage; // Was 500 * stage
-            playerData.coins += reward;
+            // Award Coins
+            const rewardCoins = 1000 * gameState.stage;
+            playerData.coins += rewardCoins;
+
+            // Award Tickets
+            let rewardMsg = `\n${rewardCoins} コイン獲得！`;
+
+            // Normal Ticket for every clear
+            playerData.normalTickets++;
+            rewardMsg += `\nガチャチケット x1 GET!`;
+
+            // Rare Ticket for Boss Stages (Every 5 stages)
+            if (gameState.stage % 5 === 0) {
+                playerData.rareTickets++;
+                rewardMsg += `\nレアチケット x1 GET!`;
+            }
 
             // Unlock next stage
             if (gameState.stage > playerData.maxStageCleared) {
@@ -745,7 +810,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             saveData();
             updateStageButtons();
-            message += `\n${reward} コイン獲得！`;
+            message += rewardMsg;
         }
 
         alert(message);
