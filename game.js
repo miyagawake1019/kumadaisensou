@@ -88,6 +88,20 @@ document.addEventListener('DOMContentLoaded', () => {
         'box': { name: '箱グマ', cost: 200, hp: 1000, attack: 0, speed: 0, cooldown: 2000, icon: '📦', id: 75, rarity: 'common' },
         'cloud': { name: '雲グマ', cost: 1500, hp: 800, attack: 200, speed: 1, cooldown: 3000, icon: '☁️', id: 76, rarity: 'rare' },
         'rainbow': { name: '虹グマ', cost: 7777, hp: 2000, attack: 777, speed: 7, cooldown: 7000, icon: '🌈', id: 77, rarity: 'legendary' },
+        // Battle Cats Parody Units (Bear Mark)
+        'neko_kuma': { name: 'ネコグマ', cost: 75, hp: 100, attack: 20, speed: 3, cooldown: 500, icon: '🐱', id: 201, rarity: 'rare' },
+        'tank_kuma': { name: 'タンクネコグマ', cost: 150, hp: 400, attack: 5, speed: 1.5, cooldown: 500, icon: '🐱', id: 202, rarity: 'rare' },
+        'battle_kuma': { name: 'バトルネコグマ', cost: 300, hp: 200, attack: 80, speed: 3, cooldown: 600, icon: '🐱', id: 203, rarity: 'rare' },
+        'kimokawa_kuma': { name: 'キモネコグマ', cost: 400, hp: 250, attack: 250, speed: 2, cooldown: 800, icon: '🦵', id: 204, rarity: 'rare' },
+        'ushi_kuma': { name: 'ウシネコグマ', cost: 500, hp: 300, attack: 50, speed: 10, cooldown: 400, icon: '🐮', id: 205, rarity: 'rare' },
+        'tori_kuma': { name: 'トリネコグマ', cost: 550, hp: 150, attack: 200, speed: 3, cooldown: 600, icon: '🐦', id: 206, rarity: 'rare' },
+        'sakana_kuma': { name: 'サカナネコグマ', cost: 800, hp: 500, attack: 250, speed: 3, cooldown: 900, icon: '🐟', id: 207, rarity: 'rare' },
+        'tokage_kuma': { name: 'トカゲネコグマ', cost: 1000, hp: 400, attack: 600, speed: 2, cooldown: 1200, icon: '🦎', id: 208, rarity: 'rare' },
+        'kyojin_kuma': { name: '巨神ネコグマ', cost: 1300, hp: 2000, attack: 1000, speed: 1.5, cooldown: 1500, icon: '👹', id: 209, rarity: 'rare' },
+        // Weak but High HP (Meatshields)
+        'tofu_kuma': { name: '豆腐グマ', cost: 10, hp: 2000, attack: 1, speed: 1, cooldown: 200, icon: '⬜', id: 301, rarity: 'common' },
+        'jelly_kuma': { name: 'ゼリーグマ', cost: 20, hp: 1500, attack: 2, speed: 2, cooldown: 250, icon: '🍮', id: 302, rarity: 'common' },
+        'paper_kuma': { name: '紙グマ', cost: 5, hp: 500, attack: 1, speed: 3, cooldown: 100, icon: '📄', id: 303, rarity: 'common' },
         // New Units 2
         'burger': { name: 'バーガーグマ', cost: 500, hp: 1000, attack: 200, speed: 2, cooldown: 1000, icon: '🍔', id: 78, rarity: 'common' },
         'pizza': { name: 'ピザグマ', cost: 600, hp: 800, attack: 300, speed: 3, cooldown: 1200, icon: '🍕', id: 79, rarity: 'common' },
@@ -346,10 +360,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Zukan Render
+    // Zukan & Upgrade Render
     function renderZukan() {
         const grid = document.getElementById('zukan-grid');
         grid.innerHTML = '';
+
+        // Add Upgrade Instructions
+        const header = document.createElement('div');
+        header.style.gridColumn = '1 / -1';
+        header.style.textAlign = 'center';
+        header.style.marginBottom = '10px';
+        header.innerHTML = '<p>キャラをタップしてコインでレベルアップ！ (Tap to Upgrade)</p>';
+        grid.appendChild(header);
 
         Object.keys(UNIT_TYPES).forEach(key => {
             const unit = UNIT_TYPES[key];
@@ -358,15 +380,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const item = document.createElement('div');
             item.className = 'zukan-item';
-            if (!isUnlocked) item.classList.add('locked');
-
-            item.innerHTML = `
-                <div class="zukan-icon">${isUnlocked ? unit.icon : '?'}</div>
-                <div class="zukan-name">${isUnlocked ? unit.name : '???'}</div>
-                <div class="zukan-cost">${isUnlocked ? 'Lv.' + level : ''}</div>
-            `;
+            if (!isUnlocked) {
+                item.classList.add('locked');
+                item.innerHTML = `
+                    <div class="zukan-icon">?</div>
+                    <div class="zukan-name">???</div>
+                `;
+            } else {
+                item.innerHTML = `
+                    <div class="zukan-icon">${unit.icon}</div>
+                    <div class="zukan-name">${unit.name}</div>
+                    <div class="zukan-cost">Lv.${level}</div>
+                `;
+                // Add Click Event for Upgrade
+                item.addEventListener('click', () => openUpgradeModal(key));
+            }
             grid.appendChild(item);
         });
+    }
+
+    function openUpgradeModal(unitKey) {
+        const unit = UNIT_TYPES[unitKey];
+        const level = playerData.unitLevels[unitKey] || 1;
+        const upgradeCost = Math.floor(unit.cost * level * 0.5) + 100; // Formula: Base * Level * 0.5 + 100
+
+        // Use standard confirm for simplicity or create a modal.
+        // Let's use confirm for now, but formatted nicely.
+        const confirmMsg = `
+${unit.icon} ${unit.name} (Lv.${level})
+現在のステータス (Current Stats):
+HP: ${unit.hp + (level-1)*100}
+ATK: ${unit.attack + (level-1)*100}
+
+レベルアップ費用: ${upgradeCost} コイン
+(Upgrade Cost: ${upgradeCost} Coins)
+
+レベルアップしますか？
+`;
+        if (confirm(confirmMsg)) {
+            if (playerData.coins >= upgradeCost) {
+                playerData.coins -= upgradeCost;
+                playerData.unitLevels[unitKey]++;
+                saveData();
+                renderZukan(); // Refresh UI
+                updateGlobalCoinsUI();
+                alert(`${unit.name} が Lv.${playerData.unitLevels[unitKey]} になりました！`);
+            } else {
+                alert("コインが足りません！ (Not enough coins)");
+            }
+        }
     }
 
     // Team Select Render & Logic
