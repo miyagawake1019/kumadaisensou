@@ -848,7 +848,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('fire-cannon-btn');
         if (btn) {
             const charge = Math.floor(gameState.cannonCharge);
-            btn.textContent = `にゃんこ砲\n${charge}%`;
+            btn.textContent = `くまじゅう\n${charge}%`;
             // Visual feedback
             btn.style.background = `linear-gradient(to right, #99ff99 ${charge}%, #eee ${charge}%)`;
 
@@ -908,22 +908,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // Visual Effect
-            const battleField = document.getElementById('battle-field');
-            if (battleField) {
-                const cannonEffect = document.createElement('div');
-                cannonEffect.className = 'cannon-blast';
-                // Inline styles for now, can move to CSS later
-                cannonEffect.style.position = 'absolute';
-                cannonEffect.style.left = '0';
-                cannonEffect.style.top = '0';
-                cannonEffect.style.width = '100%';
-                cannonEffect.style.height = '100%';
-                cannonEffect.style.backgroundColor = 'rgba(255, 255, 255, 0.5)';
-                cannonEffect.style.zIndex = '10';
-                cannonEffect.style.pointerEvents = 'none';
-                battleField.appendChild(cannonEffect);
-                setTimeout(() => cannonEffect.remove(), 200);
+            // Visual Effect (Hadou Wave)
+            const lane = document.getElementById('lane');
+            if (lane) {
+                const wave = document.createElement('div');
+                wave.className = 'hadou-wave';
+                wave.textContent = '🌊'; // Optional icon
+                lane.appendChild(wave);
+
+                // Cleanup after animation
+                setTimeout(() => wave.remove(), 1000);
             }
 
             updateCannonUI();
