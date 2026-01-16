@@ -142,8 +142,23 @@ document.addEventListener('DOMContentLoaded', () => {
         walletLevel: 1,
         researchLevel: 1,
         accountingLevel: 1,
-        rareOrbs: 0 // Item for leveling up any unit
+        rareOrbs: 0, // Item for leveling up any unit
+        treasures: {} // Stage ID -> Level (0:None, 1:Bronze, 2:Silver, 3:Gold)
     };
+
+    // Treasure Sets Configuration
+    const TREASURE_SETS = [
+        { name: '甲信越の宝石', stages: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10], effect: 'worker', desc: '働きネコの効率アップ' },
+        { name: '中国・四国', stages: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20], effect: 'wallet', desc: 'お財布の容量アップ' },
+        { name: '九州・沖縄', stages: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30], effect: 'unit_attack', desc: 'キャラの攻撃力アップ' },
+        { name: '北海道・東北', stages: [31, 32, 33, 34, 35, 36, 37, 38, 39, 40], effect: 'unit_hp', desc: 'キャラの体力アップ' },
+        { name: '関東・東海', stages: [41, 42, 43, 44, 45, 46, 47, 48, 49, 50], effect: 'cannon', desc: 'にゃんこ砲攻撃力アップ' },
+        { name: '未来編 1章', stages: [51, 52, 53, 54, 55, 56, 57, 58, 59, 60], effect: 'exp', desc: 'クリア経験値(コイン)アップ' },
+        { name: '未来編 2章', stages: [61, 62, 63, 64, 65, 66, 67, 68, 69, 70], effect: 'energy', desc: '統率力(未実装)アップ' },
+        { name: '未来編 3章', stages: [71, 72, 73, 74, 75, 76, 77, 78, 79, 80], effect: 'cooldown', desc: '生産スピードアップ' },
+        { name: '宇宙編', stages: [81, 82, 83, 84, 85, 86, 87, 88, 89, 90], effect: 'all', desc: '全能力超アップ' },
+        { name: 'レジェンド', stages: [91, 92, 93, 94, 95, 96, 97, 98, 99, 100], effect: 'special', desc: '謎の力' }
+    ];
 
     function loadData() {
         const saved = localStorage.getItem(STORAGE_KEY);
@@ -169,6 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!playerData.researchLevel) playerData.researchLevel = 1;
                 if (!playerData.accountingLevel) playerData.accountingLevel = 1;
                 if (playerData.rareOrbs === undefined) playerData.rareOrbs = 0;
+                if (!playerData.treasures) playerData.treasures = {};
 
             } catch (e) {
                 console.error("Save data corrupted", e);
@@ -197,12 +213,37 @@ document.addEventListener('DOMContentLoaded', () => {
         if (orbEl) orbEl.textContent = playerData.rareOrbs;
     }
 
+    // --- Treasure Bonus Logic ---
+    function getTreasureMultiplier(effectType) {
+        let totalBonus = 0;
+
+        TREASURE_SETS.forEach(set => {
+            if (set.effect === effectType || set.effect === 'all') {
+                let collectedScore = 0;
+                let maxScore = set.stages.length * 3; // 3 points per Gold
+
+                set.stages.forEach(stId => {
+                    collectedScore += (playerData.treasures[stId] || 0);
+                });
+
+                // Each set gives max 100% bonus (multiplier +1.0) if fully Gold
+                // So (30 / 30) * 1.0 = +100%
+                if (maxScore > 0) {
+                    totalBonus += (collectedScore / maxScore);
+                }
+            }
+        });
+
+        return 1 + totalBonus; // Base 100% + Bonus
+    }
+
     // --- Screens ---
     const mainMenuScreen = document.getElementById('main-menu-screen');
     const gachaScreen = document.getElementById('gacha-screen');
     const zukanScreen = document.getElementById('zukan-screen');
     const teamSelectScreen = document.getElementById('team-select-screen');
     const powerUpScreen = document.getElementById('powerup-screen');
+    const treasureScreen = document.getElementById('treasure-screen');
 
     // --- Event Listeners ---
 
@@ -216,6 +257,12 @@ document.addEventListener('DOMContentLoaded', () => {
         mainMenuScreen.style.display = 'none';
         powerUpScreen.style.display = 'flex';
         renderPowerUps();
+    });
+
+    document.getElementById('menu-treasure-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        treasureScreen.style.display = 'flex';
+        renderTreasures();
     });
 
     document.getElementById('menu-gacha-btn').addEventListener('click', () => {
@@ -261,6 +308,54 @@ document.addEventListener('DOMContentLoaded', () => {
         powerUpScreen.style.display = 'none';
         mainMenuScreen.style.display = 'flex';
     });
+
+    document.getElementById('back-to-menu-from-treasure-btn').addEventListener('click', () => {
+        treasureScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
+    // Treasure Render Logic
+    function renderTreasures() {
+        const container = document.getElementById('treasure-list');
+        container.innerHTML = '';
+
+        TREASURE_SETS.forEach(set => {
+            let collectedScore = 0;
+            let maxScore = set.stages.length * 3;
+            let collectedCount = 0;
+
+            const iconsDiv = document.createElement('div');
+            iconsDiv.className = 'treasure-icons';
+
+            set.stages.forEach(stId => {
+                const level = playerData.treasures[stId] || 0;
+                collectedScore += level;
+                if (level > 0) collectedCount++;
+
+                const icon = document.createElement('div');
+                icon.className = 'treasure-icon';
+                if (level === 3) { icon.classList.add('gold'); icon.textContent = '🏆'; }
+                else if (level === 2) { icon.classList.add('silver'); icon.textContent = '🥈'; }
+                else if (level === 1) { icon.classList.add('bronze'); icon.textContent = '🥉'; }
+                else { icon.textContent = '?'; }
+                iconsDiv.appendChild(icon);
+            });
+
+            const rate = Math.floor((collectedScore / maxScore) * 100);
+
+            const setDiv = document.createElement('div');
+            setDiv.className = 'treasure-set';
+            setDiv.innerHTML = `
+                <div class="treasure-set-header">
+                    <div class="treasure-set-name">${set.name}</div>
+                    <div class="treasure-set-rate">発動率: ${rate}%</div>
+                </div>
+                <div class="treasure-set-desc">${set.desc}</div>
+            `;
+            setDiv.appendChild(iconsDiv);
+            container.appendChild(setDiv);
+        });
+    }
 
     // Power Up Screen Logic
     function renderPowerUps() {
@@ -463,7 +558,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Calculate Cooldown with Research
             // Base cooldown reduced by 5% per research level
-            const speedMult = 1 + ((playerData.researchLevel || 1) - 1) * 0.1;
+            let speedMult = 1 + ((playerData.researchLevel || 1) - 1) * 0.1;
+
+            // Treasure Bonus
+            speedMult *= getTreasureMultiplier('cooldown');
+
             const cooldownTime = UNIT_TYPES[type].cooldown / speedMult;
 
             // Simple cooldown visual (disable button temporarily)
@@ -645,12 +744,15 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
     function startGame(stageId, stageName) {
         // Reset State
-        const baseHp = 1000 + ((playerData.baseHpLevel - 1) * 1000);
-        const baseMaxMoney = 1000 + ((playerData.walletLevel - 1) * 500);
+        const hpMult = getTreasureMultiplier('unit_hp');
+        const baseHp = (1000 + ((playerData.baseHpLevel - 1) * 1000)) * hpMult;
+
+        const walletMult = getTreasureMultiplier('wallet');
+        const baseMaxMoney = (1000 + ((playerData.walletLevel - 1) * 500)) * walletMult;
 
         gameState = {
             money: 0,
-            maxMoney: baseMaxMoney, // Initial Cap with Wallet
+            maxMoney: baseMaxMoney,
             workerLevel: 1,
             cannonCharge: 0,
             stage: stageId,
@@ -721,12 +823,13 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         const now = Date.now();
 
         // 1. Money Accumulation (Passive income)
-        const incomeInterval = Math.max(5, 30 - ((playerData.workerRateLevel - 1) * 2)); // Faster with level
+        const workerMult = getTreasureMultiplier('worker');
+        const incomeInterval = Math.max(5, 30 - ((playerData.workerRateLevel - 1) * 2));
 
         if (now - gameState.lastMoneyUpdate > incomeInterval) {
-            // Calculate rate based on Worker Level
             // Base: 1000. Each level adds 500.
-            const income = 1000 + (gameState.workerLevel - 1) * 500 + (gameState.stage * 100);
+            let income = 1000 + (gameState.workerLevel - 1) * 500 + (gameState.stage * 100);
+            income *= workerMult; // Treasure Bonus
 
             if (gameState.money < gameState.maxMoney) {
                 gameState.money += income;
@@ -820,11 +923,20 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
                 hp += (level - 1) * 100;
                 attack += (level - 1) * 100;
             }
+
+            // Treasure Bonuses
+            const hpMult = getTreasureMultiplier('unit_hp');
+            const atkMult = getTreasureMultiplier('unit_attack');
+
+            hp *= hpMult;
+            attack *= atkMult;
         }
 
         // Scale Enemy Stats
         if (side === 'enemy') {
-            const multiplier = 1 + (gameState.stage * 0.1); // +10% per stage (Reduced from 20%)
+            // Stronger Enemies: Exponential Scaling
+            // 1.15^Stage
+            const multiplier = Math.pow(1.15, gameState.stage);
             hp *= multiplier;
             attack *= multiplier;
         } else if (side === 'player' && type === 'little') {
@@ -1062,7 +1174,12 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
         if (isWin) {
             // Award Coins
-            const rewardCoins = 1000 * gameState.stage;
+            let rewardCoins = 1000 * gameState.stage;
+
+            // Treasure XP Bonus
+            rewardCoins *= getTreasureMultiplier('exp');
+            rewardCoins = Math.floor(rewardCoins);
+
             playerData.coins += rewardCoins;
 
             // Award Tickets
@@ -1081,6 +1198,33 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             // Unlock next stage
             if (gameState.stage > playerData.maxStageCleared) {
                 playerData.maxStageCleared = gameState.stage;
+            }
+
+            // Treasure Drop Logic
+            const treasureRoll = Math.random();
+            let treasureLevel = 0;
+            let treasureName = '';
+
+            // Chances: Gold 10%, Silver 20%, Bronze 30% -> Total 60% drop?
+            // Simplified:
+            // 0.00 - 0.10: Gold
+            // 0.10 - 0.30: Silver
+            // 0.30 - 0.60: Bronze
+            // 0.60 - 1.00: None
+
+            // Adjust chances via Treasure Item (Future idea). For now fixed.
+            if (treasureRoll < 0.15) { treasureLevel = 3; treasureName = '最高のお宝 (Gold)'; }
+            else if (treasureRoll < 0.40) { treasureLevel = 2; treasureName = '普通のお宝 (Silver)'; }
+            else if (treasureRoll < 0.70) { treasureLevel = 1; treasureName = '粗悪なお宝 (Bronze)'; }
+
+            if (treasureLevel > 0) {
+                const currentT = playerData.treasures[gameState.stage] || 0;
+                if (treasureLevel > currentT) {
+                    playerData.treasures[gameState.stage] = treasureLevel;
+                    rewardMsg += `\n✨ ${treasureName} を発見！！`;
+                } else {
+                    rewardMsg += `\n(お宝発見...でも持ってるやつより質が低い)`;
+                }
             }
 
             saveData();
@@ -1175,7 +1319,10 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             gameState.cannonCharge = 0;
 
             // Effect: Damage all enemies and push them back
-            const cannonDmg = 500 + ((playerData.cannonPowerLevel - 1) * 500);
+            let cannonDmg = 500 + ((playerData.cannonPowerLevel - 1) * 500);
+
+            // Treasure
+            cannonDmg *= getTreasureMultiplier('cannon');
 
             gameState.units.forEach(unit => {
                 if (unit.side === 'enemy') {

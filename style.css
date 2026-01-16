@@ -860,3 +860,85 @@ h1 {
 .powerup-buy-btn:hover {
     background-color: #ffb300;
 }
+
+/* Treasure Screen */
+.treasure-container {
+    width: 90%;
+    max-width: 700px;
+    height: 450px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 10px;
+}
+
+.treasure-set {
+    background-color: #fff8e1;
+    border: 2px solid #ffca28;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.treasure-set-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ffecb3;
+    padding-bottom: 5px;
+}
+
+.treasure-set-name {
+    font-weight: bold;
+    color: #5d4037;
+    font-size: 1.1em;
+}
+
+.treasure-set-rate {
+    font-weight: bold;
+    color: #ff6f00;
+}
+
+.treasure-set-desc {
+    font-size: 0.9em;
+    color: #795548;
+    margin-bottom: 10px;
+}
+
+.treasure-icons {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 2px;
+}
+
+.treasure-icon {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background-color: #eee;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8em;
+}
+
+.treasure-icon.gold { background: radial-gradient(#ffd700, #ffca28); border-color: #ff6f00; box-shadow: 0 0 5px gold; }
+.treasure-icon.silver { background: radial-gradient(#e0e0e0, #bdbdbd); border-color: #616161; }
+.treasure-icon.bronze { background: radial-gradient(#d7ccc8, #8d6e63); border-color: #5d4037; }
+
+/* Stage Button Indicators */
+.stage-treasure-indicator {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-right: 5px;
+    border: 1px solid #999;
+    background: #ccc;
+    vertical-align: middle;
+}
+.stage-treasure-indicator.gold { background: gold; border-color: orange; }
+.stage-treasure-indicator.silver { background: silver; border-color: gray; }
+.stage-treasure-indicator.bronze { background: #cd7f32; border-color: brown; }
