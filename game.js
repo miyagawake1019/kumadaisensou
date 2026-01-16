@@ -141,7 +141,8 @@ document.addEventListener('DOMContentLoaded', () => {
         cannonPowerLevel: 1,
         walletLevel: 1,
         researchLevel: 1,
-        accountingLevel: 1
+        accountingLevel: 1,
+        rareOrbs: 0 // Item for leveling up any unit
     };
 
     function loadData() {
@@ -167,6 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!playerData.walletLevel) playerData.walletLevel = 1;
                 if (!playerData.researchLevel) playerData.researchLevel = 1;
                 if (!playerData.accountingLevel) playerData.accountingLevel = 1;
+                if (playerData.rareOrbs === undefined) playerData.rareOrbs = 0;
 
             } catch (e) {
                 console.error("Save data corrupted", e);
@@ -190,6 +192,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const rareTicketEl = document.getElementById('player-rare-tickets');
         if (rareTicketEl) rareTicketEl.textContent = playerData.rareTickets;
+
+        const orbEl = document.getElementById('player-orbs');
+        if (orbEl) orbEl.textContent = playerData.rareOrbs;
     }
 
     // --- Screens ---
@@ -339,6 +344,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gacha Logic - Helper
     function executeGacha(poolType) {
+        // Rare Orb Chance
+        let orbChance = 0.01; // 1% for Normal
+        if (poolType === 'rare') orbChance = 0.10; // 10% for Rare
+
+        if (Math.random() < orbChance) {
+            // Drop Orb
+            playerData.rareOrbs++;
+            document.getElementById('gacha-result').textContent = '🔮';
+            document.getElementById('gacha-message').textContent = `レア玉ゲット！ (Rare Orb!) どのキャラもレベルアップ可能！`;
+            saveData();
+            return;
+        }
+
         // Weighted Random Selection
         const unitKeys = Object.keys(UNIT_TYPES);
         let weightedPool = [];
@@ -512,31 +530,47 @@ document.addEventListener('DOMContentLoaded', () => {
     function openUpgradeModal(unitKey) {
         const unit = UNIT_TYPES[unitKey];
         const level = playerData.unitLevels[unitKey] || 1;
-        const upgradeCost = Math.floor(unit.cost * level * 0.5) + 100; // Formula: Base * Level * 0.5 + 100
+        const upgradeCost = Math.floor(unit.cost * level * 0.5) + 100;
 
-        // Use standard confirm for simplicity or create a modal.
-        // Let's use confirm for now, but formatted nicely.
-        const confirmMsg = `
+        // Use custom modal logic with standard prompts for now,
+        // but offering two choices is hard with just confirm().
+        // We will prompt sequentially or check logic.
+
+        // Let's use a simpler approach: Ask which method to use via prompt
+        // or just use confirm for Coins, and if declined/failed, ask for Orb?
+        // Better: Custom HTML modal would be ideal, but keeping it simple with Prompt loop.
+
+        let choice = prompt(`
 ${unit.icon} ${unit.name} (Lv.${level})
-現在のステータス (Current Stats):
-HP: ${unit.hp + (level-1)*100}
-ATK: ${unit.attack + (level-1)*100}
+HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
-レベルアップ費用: ${upgradeCost} コイン
-(Upgrade Cost: ${upgradeCost} Coins)
+1. コインで強化 (Coins): ${upgradeCost} Coin
+2. レア玉で強化 (Rare Orb): 1 Orb (持: ${playerData.rareOrbs})
 
-レベルアップしますか？
-`;
-        if (confirm(confirmMsg)) {
+番号を入力してください (Enter 1 or 2):
+`);
+
+        if (choice === '1') {
             if (playerData.coins >= upgradeCost) {
                 playerData.coins -= upgradeCost;
                 playerData.unitLevels[unitKey]++;
                 saveData();
-                renderZukan(); // Refresh UI
+                renderZukan();
                 updateGlobalCoinsUI();
-                alert(`${unit.name} が Lv.${playerData.unitLevels[unitKey]} になりました！`);
+                alert(`コインを使ってレベルアップ！ Lv.${playerData.unitLevels[unitKey]}`);
             } else {
-                alert("コインが足りません！ (Not enough coins)");
+                alert("コインが足りません！");
+            }
+        } else if (choice === '2') {
+            if (playerData.rareOrbs >= 1) {
+                playerData.rareOrbs--;
+                playerData.unitLevels[unitKey]++;
+                saveData();
+                renderZukan();
+                updateGlobalCoinsUI();
+                alert(`レア玉を使ってレベルアップ！ Lv.${playerData.unitLevels[unitKey]}`);
+            } else {
+                alert("レア玉が足りません！");
             }
         }
     }
