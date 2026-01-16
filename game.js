@@ -138,7 +138,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // New Power Up Levels (Default 1)
         baseHpLevel: 1,
         workerRateLevel: 1,
-        cannonPowerLevel: 1
+        cannonPowerLevel: 1,
+        walletLevel: 1,
+        researchLevel: 1,
+        accountingLevel: 1
     };
 
     function loadData() {
@@ -161,6 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!playerData.baseHpLevel) playerData.baseHpLevel = 1;
                 if (!playerData.workerRateLevel) playerData.workerRateLevel = 1;
                 if (!playerData.cannonPowerLevel) playerData.cannonPowerLevel = 1;
+                if (!playerData.walletLevel) playerData.walletLevel = 1;
+                if (!playerData.researchLevel) playerData.researchLevel = 1;
+                if (!playerData.accountingLevel) playerData.accountingLevel = 1;
 
             } catch (e) {
                 console.error("Save data corrupted", e);
@@ -259,7 +265,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const upgrades = [
             { id: 'baseHp', name: 'お城の体力 (Base HP)', level: playerData.baseHpLevel, desc: '+1000 HP / Lv' },
             { id: 'workerRate', name: '働きネコ効率 (Income Speed)', level: playerData.workerRateLevel, desc: '+10% Speed / Lv' },
-            { id: 'cannonPower', name: 'くまじゅう攻撃力 (Cannon Atk)', level: playerData.cannonPowerLevel, desc: '+500 Atk / Lv' }
+            { id: 'cannonPower', name: 'くまじゅう攻撃力 (Cannon Atk)', level: playerData.cannonPowerLevel, desc: '+500 Atk / Lv' },
+            { id: 'wallet', name: '働きネコお財布 (Wallet Cap)', level: playerData.walletLevel, desc: '+500 Max Money / Lv' },
+            { id: 'research', name: '研究力 (Research)', level: playerData.researchLevel, desc: 'Cooldown -5% / Lv' },
+            { id: 'accounting', name: '会計力 (Accounting)', level: playerData.accountingLevel, desc: 'Enemy Kill Bonus +20% / Lv' }
         ];
 
         upgrades.forEach(up => {
@@ -296,6 +305,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (id === 'baseHp') playerData.baseHpLevel++;
                         else if (id === 'workerRate') playerData.workerRateLevel++;
                         else if (id === 'cannonPower') playerData.cannonPowerLevel++;
+                        else if (id === 'wallet') playerData.walletLevel++;
+                        else if (id === 'research') playerData.researchLevel++;
+                        else if (id === 'accounting') playerData.accountingLevel++;
 
                         saveData();
                         updateGlobalCoinsUI();
@@ -431,11 +443,30 @@ document.addEventListener('DOMContentLoaded', () => {
             spawnUnit(type, 'player');
             updateMoneyUI();
 
+            // Calculate Cooldown with Research
+            // Base cooldown reduced by 5% per research level
+            const speedMult = 1 + ((playerData.researchLevel || 1) - 1) * 0.1;
+            const cooldownTime = UNIT_TYPES[type].cooldown / speedMult;
+
             // Simple cooldown visual (disable button temporarily)
             btn.disabled = true;
+
+            // Visual Overlay Animation
+            const overlay = btn.querySelector('.cooldown-overlay');
+            if (overlay) {
+                overlay.style.height = '100%';
+                overlay.style.transition = `height ${cooldownTime}ms linear`;
+                // Force reflow
+                overlay.offsetHeight;
+                overlay.style.height = '0%';
+            }
+
             setTimeout(() => {
-                if (btn) btn.disabled = false;
-            }, UNIT_TYPES[type].cooldown);
+                if (btn) {
+                    btn.disabled = false;
+                    if (overlay) overlay.style.transition = 'none'; // Reset
+                }
+            }, cooldownTime);
         }
     });
 
@@ -581,10 +612,11 @@ ATK: ${unit.attack + (level-1)*100}
     function startGame(stageId, stageName) {
         // Reset State
         const baseHp = 1000 + ((playerData.baseHpLevel - 1) * 1000);
+        const baseMaxMoney = 1000 + ((playerData.walletLevel - 1) * 500);
 
         gameState = {
             money: 0,
-            maxMoney: 1000, // Initial Cap
+            maxMoney: baseMaxMoney, // Initial Cap with Wallet
             workerLevel: 1,
             cannonCharge: 0,
             stage: stageId,
@@ -940,7 +972,21 @@ ATK: ${unit.attack + (level-1)*100}
     }
 
     function handleUnitDeath(unit) {
-        // 1. Deal 100 Damage to nearby enemies
+        // 1. Accounting Bonus (Money on Kill)
+        if (unit.side === 'enemy') {
+            const baseReward = 50;
+            const multiplier = 1 + ((playerData.accountingLevel - 1) * 0.2);
+            const reward = Math.floor(baseReward * multiplier);
+
+            // Add directly to money, respecting cap
+            if (gameState.money < gameState.maxMoney) {
+                gameState.money += reward;
+                if (gameState.money > gameState.maxMoney) gameState.money = gameState.maxMoney;
+                updateMoneyUI();
+            }
+        }
+
+        // 2. Deal 100 Damage to nearby enemies (Death Blast)
         // Note: gameState.units contains the *current* state.
         // We iterate over surviving units to apply damage.
 
@@ -954,7 +1000,7 @@ ATK: ${unit.attack + (level-1)*100}
             }
         });
 
-        // 2. Visuals - Become Angel
+        // 3. Visuals - Become Angel
         unit.element.textContent = '👼';
         unit.element.classList.add('angel-ascend');
         // Reset specific unit styles that might conflict or look weird
