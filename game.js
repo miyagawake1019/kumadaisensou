@@ -20,29 +20,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Unit Definitions
     const UNIT_TYPES = {
-        'little': { name: 'こぐま', cost: 50, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1, rarity: 'common' },
-        'pillar': { name: '柱グマ', cost: 150, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2, rarity: 'common' },
-        'big': { name: 'おオグマ', cost: 250, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3, rarity: 'common' },
-        'max': { name: '最大おおぐま', cost: 500, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4, rarity: 'rare' },
-        'ninja': { name: '忍者グマ', cost: 1000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5, rarity: 'rare' },
-        'magic': { name: '魔法グマ', cost: 2500, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6, rarity: 'rare' },
-        'mecha': { name: 'メカグマ', cost: 5000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7, rarity: 'epic' },
-        'galaxy': { name: '銀河グマ', cost: 25000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8, rarity: 'legendary' },
+        'little': { name: 'こぐま', cost: 50, hp: 50, attack: 10, speed: 2, cooldown: 1000, icon: '🧸', id: 1, rarity: 'common', abilities: {} },
+        'pillar': { name: '柱グマ', cost: 150, hp: 150, attack: 30, speed: 1.5, cooldown: 2000, icon: '🗿', id: 2, rarity: 'common', abilities: {} },
+        'big': { name: 'おオグマ', cost: 250, hp: 400, attack: 80, speed: 1, cooldown: 4000, icon: '🐻', id: 3, rarity: 'common', abilities: {} },
+        'max': { name: '最大おおぐま', cost: 500, hp: 1000, attack: 200, speed: 0.5, cooldown: 8000, icon: '👹', id: 4, rarity: 'rare', abilities: { kbChance: 0.2 } },
+        'ninja': { name: '忍者グマ', cost: 1000, hp: 600, attack: 150, speed: 4, cooldown: 3000, icon: '🥷', id: 5, rarity: 'rare', abilities: { massiveVs: ['black'] } },
+        'magic': { name: '魔法グマ', cost: 2500, hp: 800, attack: 300, speed: 1, cooldown: 5000, icon: '🧙', id: 6, rarity: 'rare', abilities: { slow: 0.3 } },
+        'mecha': { name: 'メカグマ', cost: 5000, hp: 3000, attack: 500, speed: 0.8, cooldown: 10000, icon: '🤖', id: 7, rarity: 'epic', abilities: { strongVs: ['alien'] } },
+        'galaxy': { name: '銀河グマ', cost: 25000, hp: 10000, attack: 2000, speed: 2, cooldown: 15000, icon: '🌌', id: 8, rarity: 'legendary', abilities: { massiveVs: ['alien'] } },
         'universe': { name: '宇宙グマ', cost: 50000, hp: 20000, attack: 5000, speed: 3, cooldown: 20000, icon: '🪐', id: 9, rarity: 'legendary' },
         'dimension': { name: '次元グマ', cost: 250000, hp: 50000, attack: 10000, speed: 4, cooldown: 25000, icon: '🌀', id: 10, rarity: 'legendary' },
         'god': { name: '神グマ', cost: 500000, hp: 100000, attack: 50000, speed: 1, cooldown: 30000, icon: '⚡', id: 11, rarity: 'legendary' },
         'infinity': { name: '無限グマ', cost: 2500000, hp: 500000, attack: 100000, speed: 5, cooldown: 40000, icon: '♾️', id: 12, rarity: 'legendary' },
-        'fire': { name: '炎グマ', cost: 750, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13, rarity: 'rare' },
-        'ice': { name: '氷グマ', cost: 750, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14, rarity: 'rare' },
-        'thunder': { name: '雷グマ', cost: 1250, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15, rarity: 'rare' },
-        'knight': { name: '騎士グマ', cost: 1500, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16, rarity: 'rare' },
-        'king': { name: '王様グマ', cost: 10000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17, rarity: 'epic' },
-        'angel': { name: '天使グマ', cost: 3000, hp: 800, attack: 200, speed: 2, cooldown: 4000, icon: '👼', id: 18, rarity: 'rare' },
-        'devil': { name: '悪魔グマ', cost: 4000, hp: 1200, attack: 400, speed: 3, cooldown: 4500, icon: '😈', id: 19, rarity: 'rare' },
-        'robot': { name: 'ロボグマ', cost: 6000, hp: 4000, attack: 300, speed: 0.5, cooldown: 8000, icon: '🦾', id: 20, rarity: 'epic' },
-        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21, rarity: 'epic' },
-        'craft': { name: '攻撃クラフト', cost: 12000, hp: 3000, attack: 1500, speed: 5, cooldown: 6000, icon: '✈️', id: 22, rarity: 'epic' },
-        'dragon': { name: 'ドラゴングマ', cost: 15000, hp: 8000, attack: 2000, speed: 2, cooldown: 12000, icon: '🐉', id: 23, rarity: 'epic' },
+        'fire': { name: '炎グマ', cost: 750, hp: 400, attack: 120, speed: 3, cooldown: 2500, icon: '🔥', id: 13, rarity: 'rare', abilities: { strongVs: ['red'] } },
+        'ice': { name: '氷グマ', cost: 750, hp: 600, attack: 80, speed: 1.5, cooldown: 2500, icon: '🧊', id: 14, rarity: 'rare', abilities: { freeze: 0.2 } },
+        'thunder': { name: '雷グマ', cost: 1250, hp: 500, attack: 150, speed: 5, cooldown: 3000, icon: '⚡', id: 15, rarity: 'rare', abilities: { slow: 0.4 } },
+        'knight': { name: '騎士グマ', cost: 1500, hp: 1500, attack: 100, speed: 1, cooldown: 3500, icon: '🛡️', id: 16, rarity: 'rare', abilities: { tank: true } },
+        'king': { name: '王様グマ', cost: 10000, hp: 5000, attack: 800, speed: 1.2, cooldown: 10000, icon: '👑', id: 17, rarity: 'epic', abilities: {} },
+        'angel': { name: '天使グマ', cost: 3000, hp: 800, attack: 200, speed: 2, cooldown: 4000, icon: '👼', id: 18, rarity: 'rare', abilities: { strongVs: ['black'] } },
+        'devil': { name: '悪魔グマ', cost: 4000, hp: 1200, attack: 400, speed: 3, cooldown: 4500, icon: '😈', id: 19, rarity: 'rare', abilities: {} },
+        'robot': { name: 'ロボグマ', cost: 6000, hp: 4000, attack: 300, speed: 0.5, cooldown: 8000, icon: '🦾', id: 20, rarity: 'epic', abilities: { toughVs: ['metal'] } },
+        'samurai': { name: '侍グマ', cost: 8000, hp: 2000, attack: 1000, speed: 4, cooldown: 5000, icon: '⚔️', id: 21, rarity: 'epic', abilities: { critical: 0.15 } },
+        'craft': { name: '攻撃クラフト', cost: 12000, hp: 3000, attack: 1500, speed: 5, cooldown: 6000, icon: '✈️', id: 22, rarity: 'epic', abilities: { massiveVs: ['floating'] } },
+        'dragon': { name: 'ドラゴングマ', cost: 15000, hp: 8000, attack: 2000, speed: 2, cooldown: 12000, icon: '🐉', id: 23, rarity: 'epic', abilities: { strongVs: ['red', 'black'] } },
         'hero': { name: '勇者グマ', cost: 20000, hp: 5000, attack: 3000, speed: 3, cooldown: 10000, icon: '🗡️', id: 24, rarity: 'epic' },
         'alien': { name: 'エイリアングマ', cost: 30000, hp: 6000, attack: 4000, speed: 4, cooldown: 8000, icon: '👽', id: 25, rarity: 'legendary' },
         'ghost': { name: 'ゴーストグマ', cost: 40000, hp: 2000, attack: 5000, speed: 6, cooldown: 5000, icon: '👻', id: 26, rarity: 'legendary' },
@@ -95,13 +95,21 @@ document.addEventListener('DOMContentLoaded', () => {
         'kimokawa_kuma': { name: 'キモネコグマ', cost: 400, hp: 250, attack: 250, speed: 2, cooldown: 800, icon: '🦵', id: 204, rarity: 'rare' },
         'ushi_kuma': { name: 'ウシネコグマ', cost: 500, hp: 300, attack: 50, speed: 10, cooldown: 400, icon: '🐮', id: 205, rarity: 'rare' },
         'tori_kuma': { name: 'トリネコグマ', cost: 550, hp: 150, attack: 200, speed: 3, cooldown: 600, icon: '🐦', id: 206, rarity: 'rare' },
-        'sakana_kuma': { name: 'サカナネコグマ', cost: 800, hp: 500, attack: 250, speed: 3, cooldown: 900, icon: '🐟', id: 207, rarity: 'rare' },
-        'tokage_kuma': { name: 'トカゲネコグマ', cost: 1000, hp: 400, attack: 600, speed: 2, cooldown: 1200, icon: '🦎', id: 208, rarity: 'rare' },
-        'kyojin_kuma': { name: '巨神ネコグマ', cost: 1300, hp: 2000, attack: 1000, speed: 1.5, cooldown: 1500, icon: '👹', id: 209, rarity: 'rare' },
+        'sakana_kuma': { name: 'サカナネコグマ', cost: 800, hp: 500, attack: 250, speed: 3, cooldown: 900, icon: '🐟', id: 207, rarity: 'rare', abilities: { strongVs: ['red'] } },
+        'tokage_kuma': { name: 'トカゲネコグマ', cost: 1000, hp: 400, attack: 600, speed: 2, cooldown: 1200, icon: '🦎', id: 208, rarity: 'rare', abilities: {} },
+        'kyojin_kuma': { name: '巨神ネコグマ', cost: 1300, hp: 2000, attack: 1000, speed: 1.5, cooldown: 1500, icon: '👹', id: 209, rarity: 'rare', abilities: { kbChance: 0.3 } },
         // Weak but High HP (Meatshields)
-        'tofu_kuma': { name: '豆腐グマ', cost: 10, hp: 2000, attack: 1, speed: 1, cooldown: 200, icon: '⬜', id: 301, rarity: 'common' },
-        'jelly_kuma': { name: 'ゼリーグマ', cost: 20, hp: 1500, attack: 2, speed: 2, cooldown: 250, icon: '🍮', id: 302, rarity: 'common' },
-        'paper_kuma': { name: '紙グマ', cost: 5, hp: 500, attack: 1, speed: 3, cooldown: 100, icon: '📄', id: 303, rarity: 'common' },
+        'tofu_kuma': { name: '豆腐グマ', cost: 10, hp: 2000, attack: 1, speed: 1, cooldown: 200, icon: '⬜', id: 301, rarity: 'common', abilities: {} },
+        'jelly_kuma': { name: 'ゼリーグマ', cost: 20, hp: 1500, attack: 2, speed: 2, cooldown: 250, icon: '🍮', id: 302, rarity: 'common', abilities: {} },
+        'paper_kuma': { name: '紙グマ', cost: 5, hp: 500, attack: 1, speed: 3, cooldown: 100, icon: '📄', id: 303, rarity: 'common', abilities: {} },
+
+        // --- Enemy Only Units (Traits) ---
+        'red_bear': { name: '赤グマ', hp: 800, attack: 50, speed: 2, icon: '👺', traits: ['red'] },
+        'black_bear': { name: '黒グマ', hp: 400, attack: 300, speed: 6, icon: '🕶️', traits: ['black'] },
+        'float_bear': { name: '浮遊グマ', hp: 600, attack: 80, speed: 3, icon: '🚁', traits: ['floating'] },
+        'metal_bear': { name: 'メタルグマ敵', hp: 30, attack: 50, speed: 2, icon: '⚙️', traits: ['metal'] }, // Low HP but hard to kill
+        'angel_bear': { name: '天使グマ敵', hp: 1000, attack: 100, speed: 2, icon: '👼', traits: ['angel'] },
+        'alien_bear': { name: 'エイリアングマ敵', hp: 1500, attack: 200, speed: 2, icon: '👽', traits: ['alien'] },
         // New Units 2
         'burger': { name: 'バーガーグマ', cost: 500, hp: 1000, attack: 200, speed: 2, cooldown: 1000, icon: '🍔', id: 78, rarity: 'common' },
         'pizza': { name: 'ピザグマ', cost: 600, hp: 800, attack: 300, speed: 3, cooldown: 1200, icon: '🍕', id: 79, rarity: 'common' },
@@ -143,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
         researchLevel: 1,
         accountingLevel: 1,
         rareOrbs: 0, // Item for leveling up any unit
+        catFood: 0, // Premium Currency
         treasures: {} // Stage ID -> Level (0:None, 1:Bronze, 2:Silver, 3:Gold)
     };
 
@@ -184,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!playerData.researchLevel) playerData.researchLevel = 1;
                 if (!playerData.accountingLevel) playerData.accountingLevel = 1;
                 if (playerData.rareOrbs === undefined) playerData.rareOrbs = 0;
+                if (playerData.catFood === undefined) playerData.catFood = 0;
                 if (!playerData.treasures) playerData.treasures = {};
 
             } catch (e) {
@@ -211,6 +221,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const orbEl = document.getElementById('player-orbs');
         if (orbEl) orbEl.textContent = playerData.rareOrbs;
+
+        const catFoodEl = document.getElementById('player-cat-food');
+        if (catFoodEl) catFoodEl.textContent = playerData.catFood;
     }
 
     // --- Treasure Bonus Logic ---
@@ -551,10 +564,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const type = btn.getAttribute('data-type');
         const cost = parseInt(btn.getAttribute('data-cost'));
-        if (gameState.money >= cost && !gameState.gameOver && !btn.disabled) {
-            gameState.money -= cost;
+
+        // Baby Boom Logic: Cost 0, No Cooldown
+        let finalCost = cost;
+        if (gameState.babyBoomActive) finalCost = 0;
+
+        if (gameState.money >= finalCost && !gameState.gameOver && !btn.disabled) {
+            gameState.money -= finalCost;
             spawnUnit(type, 'player');
             updateMoneyUI();
+
+            // Check Baby Boom: If active, return immediately (no cooldown)
+            if (gameState.babyBoomActive) return;
 
             // Calculate Cooldown with Research
             // Base cooldown reduced by 5% per research level
@@ -739,7 +760,11 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         lastMoneyUpdate: 0,
         gameOver: false,
         startTime: 0,
-        enemySpawnTimer: 0
+        enemySpawnTimer: 0,
+        babyBoomActive: false,
+        speedUp: false,
+        sniper: false,
+        sniperLastShot: 0
     };
 
     function startGame(stageId, stageName) {
@@ -762,10 +787,16 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             lastMoneyUpdate: Date.now(),
             gameOver: false,
             startTime: Date.now(),
-            enemySpawnTimer: Date.now()
+            enemySpawnTimer: Date.now(),
+            babyBoomActive: false,
+            speedUp: false,
+            sniper: false,
+            sniperLastShot: 0
         };
 
         updateSystemButtons();
+        updateItemButtons();
+        setGameSpeed(false); // Reset speed
 
         // Clear Lane
         lane.innerHTML = '';
@@ -806,6 +837,14 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         currentStageTitle.textContent = stageName;
         updateMoneyUI();
         updateBaseHpUI();
+
+        // Battle Start Animation
+        const startText = document.getElementById('battle-start-text');
+        if (startText) {
+            startText.classList.remove('animate-start');
+            void startText.offsetWidth; // Trigger reflow
+            startText.classList.add('animate-start');
+        }
 
         // Start Loop
         if (gameLoopId) clearInterval(gameLoopId);
@@ -862,7 +901,12 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         // 6. Check Win/Loss
         checkGameEnd();
 
-        // 7. Update Buttons State
+        // 7. Sniper Logic
+        if (gameState.sniper && now - gameState.sniperLastShot > 5000) {
+            handleSniperShot(now);
+        }
+
+        // 8. Update Buttons State
         updateButtonsState();
     }
 
@@ -891,6 +935,28 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             else if (effectiveTime > 80) enemyType = 'max';
             else if (effectiveTime > 50) enemyType = 'big';
             else if (effectiveTime > 20) enemyType = 'pillar';
+
+            // --- Traited Enemy Invasions ---
+            const stage = gameState.stage;
+            const rand = Math.random();
+
+            // Red Enemies (Early-Mid)
+            if (stage >= 5 && stage <= 25 && rand < 0.3) enemyType = 'red_bear';
+
+            // Floating Enemies (Mid)
+            if (stage >= 15 && stage <= 35 && rand < 0.3) enemyType = 'float_bear';
+
+            // Black Enemies (XP Stages/Mid-Late)
+            if (stage >= 25 && stage <= 50 && rand < 0.25) enemyType = 'black_bear';
+
+            // Metal Enemies (Special)
+            if (stage >= 30 && rand < 0.15) enemyType = 'metal_bear';
+
+            // Angel Enemies (Late)
+            if (stage >= 40 && rand < 0.2) enemyType = 'angel_bear';
+
+            // Alien Enemies (Future/End)
+            if (stage >= 50 && rand < 0.25) enemyType = 'alien_bear';
 
             // Ensure Galaxy Bear appears in very late stages regardless of time, but rare
             if (gameState.stage >= 15 && Math.random() < 0.1) {
@@ -1008,6 +1074,11 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
     function updateUnitPosition(unit) {
         unit.element.style.left = unit.x + 'px';
+        if (unit.isFighting) {
+            unit.element.classList.add('fighting');
+        } else {
+            unit.element.classList.remove('fighting');
+        }
     }
 
     function triggerKnockback(unit) {
@@ -1061,21 +1132,91 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
                         u1.isFighting = true;
                         // Attack
                         if (!u1.lastAttack || Date.now() - u1.lastAttack > 1000) {
+                            // --- Combat Logic with Traits & Abilities ---
+                            let damage = u1.attack;
+                            const u1Stats = UNIT_TYPES[u1.type];
+                            const u2Stats = UNIT_TYPES[u2.type];
+                            const abilities = u1Stats.abilities || {};
+                            const traits = u2Stats.traits || [];
+
+                            let isCritical = false;
+
+                            // Check Traits
+                            if (traits.length > 0) {
+                                // Strong Vs
+                                if (abilities.strongVs && traits.some(t => abilities.strongVs.includes(t))) {
+                                    damage *= 1.5;
+                                }
+                                // Massive Damage
+                                if (abilities.massiveVs && traits.some(t => abilities.massiveVs.includes(t))) {
+                                    damage *= 3;
+                                }
+                                // Tough Vs (Defense) - Handled when u2 attacks u1, but here u1 attacks u2.
+                                // If u2 has toughVs u1's trait... but u1 has no trait yet (Player units don't typically have color traits in Battle Cats, enemies do).
+                                // Assuming Player units attack Enemy units with traits.
+                            }
+
+                            // Critical
+                            if (abilities.critical) {
+                                if (Math.random() < abilities.critical) {
+                                    damage *= 2;
+                                    isCritical = true;
+                                }
+                            }
+
+                            // Metal Trait Logic (Takes 1 damage unless Critical)
+                            if (traits.includes('metal')) {
+                                if (isCritical) {
+                                    // Critical on Metal: Massive damage or just raw damage ignoring 1 limit?
+                                    // Battle Cats: Crit deals full damage (x2) to metal. Non-crit deals 1.
+                                    // damage is already x2.
+                                } else {
+                                    damage = 1;
+                                }
+                            }
+
                             // Apply Damage
-                            u2.hp -= u1.attack;
-                            u2.currentKbDamage += u1.attack;
+                            u2.hp -= damage;
+                            u2.currentKbDamage += damage;
 
                             u1.lastAttack = Date.now();
-                            visualizeDamage(u2);
+
+                            // Attack Animation
+                            if (u1.element) {
+                                u1.element.classList.add('attacking');
+                                setTimeout(() => {
+                                    if (u1.element) u1.element.classList.remove('attacking');
+                                }, 300);
+                            }
+
+                            // Visuals
+                            if (isCritical) {
+                                visualizeCritical(u2);
+                            } else {
+                                visualizeDamage(u2);
+                            }
 
                             // Check Knockback
                             if (u2.currentKbDamage >= u2.kbThreshold) {
                                 triggerKnockback(u2);
                             }
 
+                            // Ability Procs (Freeze, Slow, KB)
+                            if (traits.length > 0) { // Most effects target traits
+                                // KB Proc
+                                if (abilities.kbChance && traits.some(t => abilities.strongVs?.includes(t) || abilities.massiveVs?.includes(t) || true)) { // Usually specific to trait, but simplified here to all or based on logic
+                                    // Simplify: If unit has kbChance, it applies generally or to counters.
+                                    // Let's say generic for now unless restricted.
+                                    if (Math.random() < abilities.kbChance) {
+                                        triggerKnockback(u2);
+                                    }
+                                }
+                                // Slow/Freeze could be added here (modifying speed/isInvincible)
+                            }
+
                             // Fire Effect for Little Bear
                             if (u1.type === 'little') {
-                                createFireEffect(u2.x, 20 + 25); // Approximate center Y
+                                createFireEffect(u2.x, 20 + 25);
                             }
                         }
                     }
@@ -1170,9 +1311,17 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         gameState.gameOver = true;
         stopGame();
 
-        let message = isWin ? "勝利！ (Victory!)" : "敗北... (Defeat...)";
+        const resultOverlay = document.getElementById('result-overlay');
+        const resultTitle = document.getElementById('result-title');
+        const resultMessage = document.getElementById('result-message');
+        const resultOkBtn = document.getElementById('result-ok-btn');
+
+        let message = "";
 
         if (isWin) {
+            resultTitle.textContent = "完全勝利 (Victory!)";
+            resultTitle.style.color = "gold";
+
             // Award Coins
             let rewardCoins = 1000 * gameState.stage;
 
@@ -1183,7 +1332,7 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             playerData.coins += rewardCoins;
 
             // Award Tickets
-            let rewardMsg = `\n${rewardCoins} コイン獲得！`;
+            let rewardMsg = `${rewardCoins} コイン獲得！`;
 
             // Normal Ticket for every clear
             playerData.normalTickets++;
@@ -1200,19 +1349,18 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
                 playerData.maxStageCleared = gameState.stage;
             }
 
+            // Small chance to find Cat Food
+            if (Math.random() < 0.3) {
+                playerData.catFood += 2;
+                rewardMsg += `\nネコ缶 x2 GET!`;
+            }
+
             // Treasure Drop Logic
             const treasureRoll = Math.random();
             let treasureLevel = 0;
             let treasureName = '';
 
             // Chances: Gold 10%, Silver 20%, Bronze 30% -> Total 60% drop?
-            // Simplified:
-            // 0.00 - 0.10: Gold
-            // 0.10 - 0.30: Silver
-            // 0.30 - 0.60: Bronze
-            // 0.60 - 1.00: None
-
-            // Adjust chances via Treasure Item (Future idea). For now fixed.
             if (treasureRoll < 0.15) { treasureLevel = 3; treasureName = '最高のお宝 (Gold)'; }
             else if (treasureRoll < 0.40) { treasureLevel = 2; treasureName = '普通のお宝 (Silver)'; }
             else if (treasureRoll < 0.70) { treasureLevel = 1; treasureName = '粗悪なお宝 (Bronze)'; }
@@ -1229,14 +1377,23 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
             saveData();
             updateStageButtons();
-            message += rewardMsg;
+            message = rewardMsg;
+
+        } else {
+            resultTitle.textContent = "敗北... (Defeat)";
+            resultTitle.style.color = "#ff4444";
+            message = "力が足りない... 出直そう。";
         }
 
-        alert(message);
+        resultMessage.textContent = message;
+        resultOverlay.style.display = 'flex';
 
-        // Return to Select
-        gameScreen.style.display = 'none';
-        stageSelectScreen.style.display = 'flex';
+        // One-time listener for closing
+        resultOkBtn.onclick = () => {
+            resultOverlay.style.display = 'none';
+            gameScreen.style.display = 'none';
+            stageSelectScreen.style.display = 'flex';
+        };
     }
 
     // Initialize
@@ -1366,11 +1523,29 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
     }
 
     function visualizeDamage(unit) {
-        // Flash red or create floating number
+        // Flash red
         unit.element.style.filter = 'brightness(0.5) sepia(1) hue-rotate(-50deg) saturate(5)';
         setTimeout(() => {
             if (unit.element) unit.element.style.filter = 'none';
         }, 200);
+    }
+
+    function visualizeCritical(unit) {
+        // Flash yellow/bright
+        unit.element.style.filter = 'brightness(2) sepia(1) hue-rotate(50deg) saturate(5)';
+
+        // Floating Text
+        const critText = document.createElement('div');
+        critText.className = 'critical-hit';
+        critText.textContent = 'CRITICAL!';
+        critText.style.left = unit.x + 'px';
+        critText.style.bottom = '100px';
+        lane.appendChild(critText);
+
+        setTimeout(() => {
+            if (unit.element) unit.element.style.filter = 'none';
+            critText.remove();
+        }, 500);
     }
 
     function visualizeBaseDamage(side) {
@@ -1393,4 +1568,152 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             fire.remove();
         }, 500);
     }
+
+    function handleSniperShot(now) {
+        // Find closest enemy to player base
+        let target = null;
+        let minX = Infinity;
+
+        gameState.units.forEach(u => {
+            if (u.side === 'enemy' && !u.isInvincible && u.x < minX) {
+                minX = u.x;
+                target = u;
+            }
+        });
+
+        if (target) {
+            gameState.sniperLastShot = now;
+
+            // Damage and KB
+            target.hp -= Math.max(100, target.maxHp * 0.05); // 5% HP or 100 dmg
+            visualizeDamage(target);
+            triggerKnockback(target);
+
+            // Visual Effect (Target Mark)
+            const mark = document.createElement('div');
+            mark.className = 'sniper-mark';
+            mark.textContent = '🎯';
+            mark.style.left = target.x + 'px';
+            mark.style.bottom = '80px';
+            lane.appendChild(mark);
+
+            setTimeout(() => mark.remove(), 500);
+        }
+    }
+
+    // --- God System ---
+    const godButton = document.getElementById('god-button');
+    const godMenuOverlay = document.getElementById('god-menu-overlay');
+    const closeGodMenuBtn = document.getElementById('close-god-menu-btn');
+
+    if (godButton) {
+        godButton.addEventListener('click', () => {
+            godMenuOverlay.style.display = 'flex';
+        });
+    }
+
+    if (closeGodMenuBtn) {
+        closeGodMenuBtn.addEventListener('click', () => {
+            godMenuOverlay.style.display = 'none';
+        });
+    }
+
+    // Battle Items
+    const speedBtn = document.getElementById('item-speed-btn');
+    const sniperBtn = document.getElementById('item-sniper-btn');
+
+    if (speedBtn) {
+        speedBtn.addEventListener('click', () => {
+            gameState.speedUp = !gameState.speedUp;
+            updateItemButtons();
+            setGameSpeed(gameState.speedUp);
+        });
+    }
+
+    if (sniperBtn) {
+        sniperBtn.addEventListener('click', () => {
+            gameState.sniper = !gameState.sniper;
+            updateItemButtons();
+        });
+    }
+
+    function updateItemButtons() {
+        if (gameState.speedUp) speedBtn.classList.add('active');
+        else speedBtn.classList.remove('active');
+
+        if (gameState.sniper) sniperBtn.classList.add('active');
+        else sniperBtn.classList.remove('active');
+    }
+
+    function setGameSpeed(isFast) {
+        if (gameLoopId) clearInterval(gameLoopId);
+        const delay = isFast ? FRAME_TIME / 2 : FRAME_TIME;
+        gameLoopId = setInterval(gameLoop, delay);
+    }
+
+    // God Abilities
+    document.getElementById('god-thunder-btn').addEventListener('click', () => {
+        useGodAbility('thunder', 20);
+    });
+
+    document.getElementById('god-babyboom-btn').addEventListener('click', () => {
+        useGodAbility('babyboom', 50);
+    });
+
+    document.getElementById('god-heal-btn').addEventListener('click', () => {
+        useGodAbility('heal', 10);
+    });
+
+    function useGodAbility(ability, cost) {
+        // Debug: Allow using money instead of CatFood for testing if CatFood is 0
+        // But for "Real" game logic, use CatFood.
+        // Let's implement Cat Food check.
+
+        if (playerData.catFood < cost) {
+            alert("ネコ缶が足りません！ (Not enough Cat Food)");
+            return;
+        }
+
+        if (confirm(`ネコ缶 ${cost}個を使いますか？`)) {
+            playerData.catFood -= cost;
+            saveData();
+            godMenuOverlay.style.display = 'none';
+
+            // Execute Effect
+            if (ability === 'thunder') {
+                // Damage all enemies significantly
+                gameState.units.forEach(u => {
+                    if (u.side === 'enemy') {
+                        u.hp -= (u.maxHp * 0.5) + 10000; // 50% HP + 10000 Flat
+                        visualizeDamage(u);
+                        triggerKnockback(u);
+                    }
+                });
+                alert("神の雷！ (God Thunder!)");
+            } else if (ability === 'babyboom') {
+                gameState.babyBoomActive = true;
+                alert("ベビーラッシュ開始！ (Baby Boom Start!)");
+                setTimeout(() => {
+                    gameState.babyBoomActive = false;
+                    alert("ベビーラッシュ終了 (Baby Boom End)");
+                }, 10000); // 10 seconds
+            } else if (ability === 'heal') {
+                // Get Max HP
+                const hpMult = getTreasureMultiplier('unit_hp');
+                const maxBaseHp = (1000 + ((playerData.baseHpLevel - 1) * 1000)) * hpMult;
+                gameState.playerBaseHp = maxBaseHp;
+                updateBaseHpUI();
+                alert("城が回復した！ (Base Healed!)");
+            }
+        }
+    }
+
+    // Expose for Debugging/Testing
+    window.debugGame = {
+        spawnUnit,
+        get gameState() { return gameState; },
+        playerData,
+        UNIT_TYPES,
+        useGodAbility
+    };
 });
