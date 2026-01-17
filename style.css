@@ -1190,3 +1190,136 @@ h1 {
 .animate-start {
     animation: battle-start-anim 2s ease-out forwards;
 }
+
+
+/* Global Header */
+#global-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 5px;
+    z-index: 500;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 2px 10px;
+}
+
+.header-row.small {
+    font-size: 12px;
+    justify-content: flex-end;
+    gap: 15px;
+    color: #ccc;
+}
+
+.user-rank-container {
+    background: #ffaa00;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    color: #000;
+    border: 1px solid #fff;
+    font-size: 14px;
+}
+
+.resources-container {
+    display: flex;
+    gap: 15px;
+}
+
+.res-item {
+    white-space: nowrap;
+}
+
+/* Adjust screens to not overlap header */
+#main-menu-screen, #stage-select-screen, #gacha-screen, #zukan-screen, #team-select-screen, #powerup-screen, #treasure-screen, #exchange-screen {
+    padding-top: 60px; /* Space for header */
+}
+
+/* Game Screen specific */
+#game-screen {
+    /* Battle screen has its own header, maybe hide global header?
+       Or overlay it. Let's hide global header during battle via JS or CSS */
+}
+
+/* Exchange Screen */
+.exchange-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 80%;
+    max-width: 400px;
+}
+
+.exchange-item {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 10px;
+    color: #333;
+}
+
+.ex-icon {
+    font-size: 40px;
+    margin-right: 20px;
+}
+
+.ex-info {
+    flex-grow: 1;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ex-btn {
+    width: 80px;
+    padding: 8px;
+    font-size: 14px;
+}
+
+/* Gacha Animation */
+#gacha-capsule-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 200;
+}
+
+#gacha-capsule {
+    font-size: 100px;
+    animation: roll-in 1s ease-out forwards, shake 0.5s 1s ease-in-out infinite, open-pop 0.2s 2s forwards;
+}
+
+@keyframes roll-in {
+    0% { transform: translateX(100vw) rotate(0deg); }
+    100% { transform: translateX(0) rotate(-360deg); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    75% { transform: rotate(-10deg); }
+}
+
+@keyframes open-pop {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(2); opacity: 0; }
+}

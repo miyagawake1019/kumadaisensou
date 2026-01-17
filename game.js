@@ -224,6 +224,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const catFoodEl = document.getElementById('player-cat-food');
         if (catFoodEl) catFoodEl.textContent = playerData.catFood;
+
+        // User Rank Calculation
+        let rank = 0;
+        if (playerData.unitLevels) {
+            Object.values(playerData.unitLevels).forEach(lvl => rank += lvl);
+        }
+        // Also add power up levels
+        rank += (playerData.baseHpLevel || 1);
+        rank += (playerData.workerRateLevel || 1);
+        rank += (playerData.cannonPowerLevel || 1);
+        rank += (playerData.walletLevel || 1);
+        rank += (playerData.researchLevel || 1);
+        rank += (playerData.accountingLevel || 1);
+
+        const rankEl = document.getElementById('user-rank');
+        if (rankEl) rankEl.textContent = rank;
     }
 
     // --- Treasure Bonus Logic ---
@@ -257,6 +273,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamSelectScreen = document.getElementById('team-select-screen');
     const powerUpScreen = document.getElementById('powerup-screen');
     const treasureScreen = document.getElementById('treasure-screen');
+    const exchangeScreen = document.getElementById('exchange-screen');
+    const globalHeader = document.getElementById('global-header');
 
     // --- Event Listeners ---
 
@@ -264,6 +282,56 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('menu-start-btn').addEventListener('click', () => {
         mainMenuScreen.style.display = 'none';
         stageSelectScreen.style.display = 'flex';
+    });
+
+    document.getElementById('menu-exchange-btn').addEventListener('click', () => {
+        mainMenuScreen.style.display = 'none';
+        exchangeScreen.style.display = 'flex';
+    });
+
+    document.getElementById('back-to-menu-from-exchange-btn').addEventListener('click', () => {
+        exchangeScreen.style.display = 'none';
+        mainMenuScreen.style.display = 'flex';
+    });
+
+    // Exchange Logic
+    document.getElementById('ex-normal-btn').addEventListener('click', () => {
+        if (playerData.normalTickets >= 1) {
+            if (confirm("通常チケット1枚を 10,000 XP に交換しますか？")) {
+                playerData.normalTickets--;
+                playerData.coins += 10000;
+                saveData();
+                alert("交換しました！");
+            }
+        } else {
+            alert("チケットが足りません！");
+        }
+    });
+
+    document.getElementById('ex-rare-btn').addEventListener('click', () => {
+        if (playerData.rareTickets >= 1) {
+            if (confirm("レアチケット1枚を 50,000 XP に交換しますか？")) {
+                playerData.rareTickets--;
+                playerData.coins += 50000;
+                saveData();
+                alert("交換しました！");
+            }
+        } else {
+            alert("チケットが足りません！");
+        }
+    });
+
+    document.getElementById('ex-orb-btn').addEventListener('click', () => {
+        if (playerData.rareOrbs >= 1) {
+            if (confirm("レア玉1個を 100,000 XP に交換しますか？")) {
+                playerData.rareOrbs--;
+                playerData.coins += 100000;
+                saveData();
+                alert("交換しました！");
+            }
+        } else {
+            alert("レア玉が足りません！");
+        }
     });
 
     document.getElementById('menu-powerup-btn').addEventListener('click', () => {
@@ -452,6 +520,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gacha Logic - Helper
     function executeGacha(poolType) {
+        // Animation Start
+        const capsuleContainer = document.getElementById('gacha-capsule-container');
+        const capsule = document.getElementById('gacha-capsule');
+
+        // Reset Visuals
+        document.getElementById('gacha-result').textContent = '?';
+        document.getElementById('gacha-message').textContent = 'ガチャ中...';
+        document.querySelector('.gacha-controls').style.display = 'none'; // Hide buttons
+
+        capsuleContainer.style.display = 'flex';
+        // Reset Animation hack
+        capsule.style.animation = 'none';
+        capsule.offsetHeight; /* trigger reflow */
+        capsule.style.animation = null;
+
+        // Wait for animation (2s total: 1s roll, 1s shake/open)
+        setTimeout(() => {
+            capsuleContainer.style.display = 'none';
+            document.querySelector('.gacha-controls').style.display = 'flex';
+
+            // Logic
+            finalizeGacha(poolType);
+        }, 2200);
+    }
+
+    function finalizeGacha(poolType) {
         // Rare Orb Chance
         let orbChance = 0.01; // 1% for Normal
         if (poolType === 'rare') orbChance = 0.10; // 10% for Rare
@@ -495,16 +589,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.getElementById('gacha-result').textContent = unit.icon;
 
+        // XP Value calculation (approx)
+        const sellValue = unit.rarity === 'legendary' ? 1000000 :
+                          unit.rarity === 'epic' ? 200000 :
+                          unit.rarity === 'rare' ? 50000 : 10000;
+
         if (!playerData.unlockedUnits.includes(randomKey)) {
             playerData.unlockedUnits.push(randomKey);
             playerData.unitLevels[randomKey] = 1;
             document.getElementById('gacha-message').textContent = `NEW! ${unit.name} をゲット！ (Lv.1)`;
         } else {
-            // Duplicate: Level Up
+            // Duplicate
+            // Ask User: Use (Level Up) or Exchange (XP)?
+            // Since `confirm` is blocking, we use it.
+            // But we already showed the result.
+            // In a real app, this would be a modal. For now, simple logic:
+
+            // Auto level up default, but maybe toggle?
+            // User requested "Change into money".
+            // Let's assume automatic level up is still "Standard" unless we add a setting.
+            // BUT, let's add a prompt for Duplicates if it's Rare or higher?
+            // To keep it simple and consistent with "More Battle Cats", let's just Stick to Level Up + Exchange System (manual selling of tickets).
+            // However, showing the "XP Value" is nice info.
+
             if (!playerData.unitLevels[randomKey]) playerData.unitLevels[randomKey] = 1;
             playerData.unitLevels[randomKey]++;
             const newLevel = playerData.unitLevels[randomKey];
-            document.getElementById('gacha-message').textContent = `${unit.name} かぶり！ レベルアップ！ (Lv.${newLevel})`;
+            document.getElementById('gacha-message').textContent = `${unit.name} かぶり！ レベルアップ！ (Lv.${newLevel})\n(売却価値: ${sellValue} XP)`;
         }
 
         saveData();
@@ -833,6 +944,7 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         // Update UI
         stageSelectScreen.style.display = 'none';
         gameScreen.style.display = 'flex';
+        if (globalHeader) globalHeader.style.display = 'none'; // Hide global header in battle
         backToSelectBtn.style.display = 'block'; // Show back button
         currentStageTitle.textContent = stageName;
         updateMoneyUI();
@@ -853,6 +965,7 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
     function stopGame() {
         clearInterval(gameLoopId);
+        if (globalHeader) globalHeader.style.display = 'flex'; // Show global header again
         backToSelectBtn.style.display = 'none'; // Hide back button
     }
 
@@ -1714,6 +1827,7 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         get gameState() { return gameState; },
         playerData,
         UNIT_TYPES,
-        useGodAbility
+        useGodAbility,
+        updateGlobalCoinsUI
     };
 });

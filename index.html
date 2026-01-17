@@ -8,9 +8,27 @@
 </head>
 <body>
     <div id="game-container">
+        <!-- Persistent Header -->
+        <div id="global-header">
+            <div class="header-row">
+                <div class="user-rank-container">
+                    ユーザーランク: <span id="user-rank">0</span>
+                </div>
+                <div class="resources-container">
+                    <span class="res-item">XP: <span id="player-coins">0</span></span>
+                    <span class="res-item">缶: <span id="player-cat-food">0</span></span>
+                </div>
+            </div>
+            <div class="header-row small">
+                <span class="res-item">チケ: <span id="player-normal-tickets">0</span></span>
+                <span class="res-item">レア: <span id="player-rare-tickets">0</span></span>
+                <span class="res-item">玉: <span id="player-orbs">0</span></span>
+            </div>
+        </div>
+
         <!-- Main Menu -->
         <div id="main-menu-screen">
-            <h1>くま大戦争</h1>
+            <h1 style="margin-top: 60px;">くま大戦争</h1>
             <div class="menu-buttons">
                 <button id="menu-start-btn" class="menu-btn">出撃 (Battle)</button>
                 <button id="menu-powerup-btn" class="menu-btn">パワーアップ (Power Up)</button>
@@ -18,14 +36,34 @@
                 <button id="menu-gacha-btn" class="menu-btn">ガチャ (Gacha)</button>
                 <button id="menu-treasure-btn" class="menu-btn">お宝 (Treasures)</button>
                 <button id="menu-zukan-btn" class="menu-btn">図鑑 (Zukan)</button>
+                <button id="menu-exchange-btn" class="menu-btn" style="background-color: #4CAF50;">交換所 (Exchange)</button>
                 <button id="reset-all-btn" class="menu-btn" style="background-color: #ff5252; color: white;">全部取り消し (Reset All)</button>
             </div>
-            <div id="global-coins-display">
-                所持コイン: <span id="player-coins">0</span> |
-                チケット: <span id="player-normal-tickets">0</span> |
-                レアチケ: <span id="player-rare-tickets">0</span> |
-                レア玉: <span id="player-orbs">0</span>
+        </div>
+
+        <!-- Exchange Screen -->
+        <div id="exchange-screen" style="display: none;">
+            <h2>交換所 (Exchange)</h2>
+            <p>チケットや玉をXPに変換してレベルアップしよう！</p>
+
+            <div class="exchange-list">
+                <div class="exchange-item">
+                    <div class="ex-icon">🎫</div>
+                    <div class="ex-info">通常チケット<br>➔ 10,000 XP</div>
+                    <button id="ex-normal-btn" class="menu-btn ex-btn">交換</button>
+                </div>
+                <div class="exchange-item">
+                    <div class="ex-icon">🎟️</div>
+                    <div class="ex-info">レアチケット<br>➔ 50,000 XP</div>
+                    <button id="ex-rare-btn" class="menu-btn ex-btn">交換</button>
+                </div>
+                <div class="exchange-item">
+                    <div class="ex-icon">🔮</div>
+                    <div class="ex-info">レア玉<br>➔ 100,000 XP</div>
+                    <button id="ex-orb-btn" class="menu-btn ex-btn">交換</button>
+                </div>
             </div>
+            <button id="back-to-menu-from-exchange-btn" class="back-btn">戻る</button>
         </div>
 
         <!-- Power Up Screen -->
@@ -172,6 +210,12 @@
         <!-- Gacha Screen -->
         <div id="gacha-screen" style="display: none;">
             <h2>キャラガチャ</h2>
+
+            <!-- Capsule Animation Container -->
+            <div id="gacha-capsule-container" style="display: none;">
+                <div id="gacha-capsule">💊</div>
+            </div>
+
             <div id="gacha-visual">
                 <div id="gacha-result">?</div>
             </div>
