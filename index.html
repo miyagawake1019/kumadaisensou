@@ -26,8 +26,24 @@
             </div>
         </div>
 
+        <!-- Intro Screen -->
+        <div id="intro-screen" style="display: flex; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 1000; flex-direction: column; justify-content: center; align-items: center; overflow: hidden;">
+            <div id="intro-scroller">
+                <p>西暦20XX年...</p>
+                <p>突如として現れた</p>
+                <p>謎の生物「クマ」</p>
+                <p>彼らは可愛かった。</p>
+                <p>しかし、凶暴だった。</p>
+                <p>世界はハチミツに包まれた。</p>
+                <p>人々は恐怖した。</p>
+                <p>「くま大戦争」の始まりである。</p>
+                <p>...</p>
+                <p>（タップしてスキップ）</p>
+            </div>
+        </div>
+
         <!-- Main Menu -->
-        <div id="main-menu-screen">
+        <div id="main-menu-screen" style="display: none;">
             <h1 style="margin-top: 60px;">くま大戦争</h1>
             <div class="menu-buttons">
                 <button id="menu-start-btn" class="menu-btn">出撃 (Battle)</button>
@@ -96,115 +112,24 @@
 
         <!-- Stage Select -->
         <div id="stage-select-screen" style="display: none;">
-            <h2>ステージを選んでください</h2>
-            <div class="stage-list">
-                <!-- 1-10 -->
-                <button class="stage-btn" data-stage="1">ステージ 1: 森の入り口</button>
-                <button class="stage-btn" data-stage="2">ステージ 2: 蜂蜜の川</button>
-                <button class="stage-btn" data-stage="3">ステージ 3: 洞窟の奥</button>
-                <button class="stage-btn" data-stage="4">ステージ 4: 迷いの森</button>
-                <button class="stage-btn" data-stage="5">ステージ 5: 嵐の山</button>
-                <button class="stage-btn" data-stage="6">ステージ 6: 灼熱の砂漠</button>
-                <button class="stage-btn" data-stage="7">ステージ 7: 氷の宮殿</button>
-                <button class="stage-btn" data-stage="8">ステージ 8: 天空の城</button>
-                <button class="stage-btn" data-stage="9">ステージ 9: 宇宙の果て</button>
-                <button class="stage-btn" data-stage="10">ステージ 10: クマの神域</button>
-                <!-- 11-20 -->
-                <button class="stage-btn" data-stage="11">ステージ 11: 異次元の扉</button>
-                <button class="stage-btn" data-stage="12">ステージ 12: 歪んだ時空</button>
-                <button class="stage-btn" data-stage="13">ステージ 13: 混沌の海</button>
-                <button class="stage-btn" data-stage="14">ステージ 14: 絶望の淵</button>
-                <button class="stage-btn" data-stage="15">ステージ 15: 終焉の地</button>
-                <button class="stage-btn" data-stage="16">ステージ 16: 再生の光</button>
-                <button class="stage-btn" data-stage="17">ステージ 17: 神々の遊戯</button>
-                <button class="stage-btn" data-stage="18">ステージ 18: 無限の回廊</button>
-                <button class="stage-btn" data-stage="19">ステージ 19: 真理の扉</button>
-                <button class="stage-btn" data-stage="20">ステージ 20: 最終決戦</button>
-                <!-- 21-30 -->
-                <button class="stage-btn" data-stage="21">ステージ 21: 天使の階段</button>
-                <button class="stage-btn" data-stage="22">ステージ 22: 悪魔の住処</button>
-                <button class="stage-btn" data-stage="23">ステージ 23: 機械仕掛けの森</button>
-                <button class="stage-btn" data-stage="24">ステージ 24: 侍の道場</button>
-                <button class="stage-btn" data-stage="25">ステージ 25: 竜の巣窟</button>
-                <button class="stage-btn" data-stage="26">ステージ 26: 虹の架け橋</button>
-                <button class="stage-btn" data-stage="27">ステージ 27: 闇の深淵</button>
-                <button class="stage-btn" data-stage="28">ステージ 28: 光の果て</button>
-                <button class="stage-btn" data-stage="29">ステージ 29: 虚無の空間</button>
-                <button class="stage-btn" data-stage="30">ステージ 30: 新・最終決戦</button>
-                <!-- 31-50 -->
-                <button class="stage-btn" data-stage="31">ステージ 31: 幻影の塔 1F</button>
-                <button class="stage-btn" data-stage="32">ステージ 32: 幻影の塔 2F</button>
-                <button class="stage-btn" data-stage="33">ステージ 33: 幻影の塔 3F</button>
-                <button class="stage-btn" data-stage="34">ステージ 34: 幻影の塔 4F</button>
-                <button class="stage-btn" data-stage="35">ステージ 35: 幻影の塔 5F</button>
-                <button class="stage-btn" data-stage="36">ステージ 36: 幻影の塔 6F</button>
-                <button class="stage-btn" data-stage="37">ステージ 37: 幻影の塔 7F</button>
-                <button class="stage-btn" data-stage="38">ステージ 38: 幻影の塔 8F</button>
-                <button class="stage-btn" data-stage="39">ステージ 39: 幻影の塔 9F</button>
-                <button class="stage-btn" data-stage="40">ステージ 40: 幻影の塔 頂上</button>
-                <button class="stage-btn" data-stage="41">ステージ 41: 裏・森の入り口</button>
-                <button class="stage-btn" data-stage="42">ステージ 42: 裏・蜂蜜の川</button>
-                <button class="stage-btn" data-stage="43">ステージ 43: 裏・洞窟の奥</button>
-                <button class="stage-btn" data-stage="44">ステージ 44: 裏・迷いの森</button>
-                <button class="stage-btn" data-stage="45">ステージ 45: 裏・嵐の山</button>
-                <button class="stage-btn" data-stage="46">ステージ 46: 裏・灼熱の砂漠</button>
-                <button class="stage-btn" data-stage="47">ステージ 47: 裏・氷の宮殿</button>
-                <button class="stage-btn" data-stage="48">ステージ 48: 裏・天空の城</button>
-                <button class="stage-btn" data-stage="49">ステージ 49: 裏・宇宙の果て</button>
-                <button class="stage-btn" data-stage="50">ステージ 50: 真・クマの神域</button>
-                <!-- 51-100 (Rainbow Road) -->
-                <button class="stage-btn" data-stage="51">ステージ 51: レインボーロード 1</button>
-                <button class="stage-btn" data-stage="52">ステージ 52: レインボーロード 2</button>
-                <button class="stage-btn" data-stage="53">ステージ 53: レインボーロード 3</button>
-                <button class="stage-btn" data-stage="54">ステージ 54: レインボーロード 4</button>
-                <button class="stage-btn" data-stage="55">ステージ 55: レインボーロード 5</button>
-                <button class="stage-btn" data-stage="56">ステージ 56: レインボーロード 6</button>
-                <button class="stage-btn" data-stage="57">ステージ 57: レインボーロード 7</button>
-                <button class="stage-btn" data-stage="58">ステージ 58: レインボーロード 8</button>
-                <button class="stage-btn" data-stage="59">ステージ 59: レインボーロード 9</button>
-                <button class="stage-btn" data-stage="60">ステージ 60: レインボーロード 10</button>
-                <button class="stage-btn" data-stage="61">ステージ 61: レインボーロード 11</button>
-                <button class="stage-btn" data-stage="62">ステージ 62: レインボーロード 12</button>
-                <button class="stage-btn" data-stage="63">ステージ 63: レインボーロード 13</button>
-                <button class="stage-btn" data-stage="64">ステージ 64: レインボーロード 14</button>
-                <button class="stage-btn" data-stage="65">ステージ 65: レインボーロード 15</button>
-                <button class="stage-btn" data-stage="66">ステージ 66: レインボーロード 16</button>
-                <button class="stage-btn" data-stage="67">ステージ 67: レインボーロード 17</button>
-                <button class="stage-btn" data-stage="68">ステージ 68: レインボーロード 18</button>
-                <button class="stage-btn" data-stage="69">ステージ 69: レインボーロード 19</button>
-                <button class="stage-btn" data-stage="70">ステージ 70: レインボーロード 20</button>
-                <button class="stage-btn" data-stage="71">ステージ 71: レインボーロード 21</button>
-                <button class="stage-btn" data-stage="72">ステージ 72: レインボーロード 22</button>
-                <button class="stage-btn" data-stage="73">ステージ 73: レインボーロード 23</button>
-                <button class="stage-btn" data-stage="74">ステージ 74: レインボーロード 24</button>
-                <button class="stage-btn" data-stage="75">ステージ 75: レインボーロード 25</button>
-                <button class="stage-btn" data-stage="76">ステージ 76: レインボーロード 26</button>
-                <button class="stage-btn" data-stage="77">ステージ 77: レインボーロード 27</button>
-                <button class="stage-btn" data-stage="78">ステージ 78: レインボーロード 28</button>
-                <button class="stage-btn" data-stage="79">ステージ 79: レインボーロード 29</button>
-                <button class="stage-btn" data-stage="80">ステージ 80: レインボーロード 30</button>
-                <button class="stage-btn" data-stage="81">ステージ 81: レインボーロード 31</button>
-                <button class="stage-btn" data-stage="82">ステージ 82: レインボーロード 32</button>
-                <button class="stage-btn" data-stage="83">ステージ 83: レインボーロード 33</button>
-                <button class="stage-btn" data-stage="84">ステージ 84: レインボーロード 34</button>
-                <button class="stage-btn" data-stage="85">ステージ 85: レインボーロード 35</button>
-                <button class="stage-btn" data-stage="86">ステージ 86: レインボーロード 36</button>
-                <button class="stage-btn" data-stage="87">ステージ 87: レインボーロード 37</button>
-                <button class="stage-btn" data-stage="88">ステージ 88: レインボーロード 38</button>
-                <button class="stage-btn" data-stage="89">ステージ 89: レインボーロード 39</button>
-                <button class="stage-btn" data-stage="90">ステージ 90: レインボーロード 40</button>
-                <button class="stage-btn" data-stage="91">ステージ 91: レインボーロード 41</button>
-                <button class="stage-btn" data-stage="92">ステージ 92: レインボーロード 42</button>
-                <button class="stage-btn" data-stage="93">ステージ 93: レインボーロード 43</button>
-                <button class="stage-btn" data-stage="94">ステージ 94: レインボーロード 44</button>
-                <button class="stage-btn" data-stage="95">ステージ 95: レインボーロード 45</button>
-                <button class="stage-btn" data-stage="96">ステージ 96: レインボーロード 46</button>
-                <button class="stage-btn" data-stage="97">ステージ 97: レインボーロード 47</button>
-                <button class="stage-btn" data-stage="98">ステージ 98: レインボーロード 48</button>
-                <button class="stage-btn" data-stage="99">ステージ 99: レインボーロード 49</button>
-                <button class="stage-btn" data-stage="100">ステージ 100: レインボーロード 終点</button>
+            <h2>出撃ステージ選択</h2>
+
+            <!-- Map Container -->
+            <div id="map-container" style="display: flex; width: 100%; height: 100%; position: relative; background: #81d4fa;">
+                <!-- Regions will be generated here -->
             </div>
-            <button id="back-to-menu-btn" class="back-btn">戻る</button>
+
+            <!-- Stage List (Overlay or Separate?) -->
+            <!-- We'll hide the map and show this list when a region is clicked -->
+            <div id="stage-list-container" style="display: none; width: 100%; height: 100%; flex-direction: column; align-items: center;">
+                <h3 id="region-title">Region Name</h3>
+                <div class="stage-list" id="stage-list-content">
+                    <!-- Dynamic Content -->
+                </div>
+                <button id="back-to-map-btn" class="back-btn">地図に戻る</button>
+            </div>
+
+            <button id="back-to-menu-btn" class="back-btn" style="position: absolute; bottom: 20px; left: 20px;">戻る</button>
         </div>
 
         <!-- Gacha Screen -->

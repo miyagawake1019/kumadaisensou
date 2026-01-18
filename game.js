@@ -267,6 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Screens ---
+    const introScreen = document.getElementById('intro-screen');
     const mainMenuScreen = document.getElementById('main-menu-screen');
     const gachaScreen = document.getElementById('gacha-screen');
     const zukanScreen = document.getElementById('zukan-screen');
@@ -277,6 +278,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const globalHeader = document.getElementById('global-header');
 
     // --- Event Listeners ---
+
+    // Intro Skip
+    if (introScreen) {
+        introScreen.addEventListener('click', () => {
+            introScreen.style.display = 'none';
+            mainMenuScreen.style.display = 'flex';
+        });
+
+        // Auto skip after animation (approx)
+        setTimeout(() => {
+            if (introScreen.style.display !== 'none') {
+                introScreen.style.display = 'none';
+                mainMenuScreen.style.display = 'flex';
+            }
+        }, 20000);
+    }
 
     // Main Menu Navigation
     document.getElementById('menu-start-btn').addEventListener('click', () => {
@@ -644,20 +661,90 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Stage Selection
-    document.querySelectorAll('.stage-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const stageId = parseInt(btn.getAttribute('data-stage'));
-            const stageName = btn.textContent;
-            startGame(stageId, stageName);
+    // --- Map System ---
+    const mapContainer = document.getElementById('map-container');
+    const stageListContainer = document.getElementById('stage-list-container');
+    const stageListContent = document.getElementById('stage-list-content');
+    const regionTitle = document.getElementById('region-title');
+    const backToMapBtn = document.getElementById('back-to-map-btn');
+
+    const REGIONS = [
+        { id: 'kyushu', name: '九州・沖縄', stages: [1,2,3,4,5,6,7], cssClass: 'region-kyushu' }, // 7
+        { id: 'shikoku', name: '四国', stages: [8,9,10,11], cssClass: 'region-shikoku' }, // 4
+        { id: 'chugoku', name: '中国', stages: [12,13,14,15,16], cssClass: 'region-chugoku' }, // 5
+        { id: 'kansai', name: '近畿', stages: [17,18,19,20,21,22,23], cssClass: 'region-kansai' }, // 7
+        { id: 'chubu', name: '中部', stages: [24,25,26,27,28,29,30,31,32], cssClass: 'region-chubu' }, // 9
+        { id: 'kanto', name: '関東', stages: [33,34,35,36,37,38,39], cssClass: 'region-kanto' }, // 7
+        { id: 'tohoku', name: '東北', stages: [40,41,42,43,44,45], cssClass: 'region-tohoku' }, // 6
+        { id: 'hokkaido', name: '北海道', stages: [46,47,48], cssClass: 'region-hokkaido' }, // 3
+        // Special Regions
+        { id: 'future', name: '未来編 (Future)', stages: [49,50,51,52,53,54,55,56,57,58,59,60], cssClass: 'region-future' },
+        { id: 'legend', name: 'レジェンド (Legend)', stages: Array.from({length: 40}, (_, i) => i + 61), cssClass: 'region-legend' }
+    ];
+
+    function initMap() {
+        mapContainer.innerHTML = '';
+        REGIONS.forEach(region => {
+            const el = document.createElement('div');
+            el.className = `map-region ${region.cssClass}`;
+            el.textContent = region.name;
+            el.addEventListener('click', () => openRegion(region));
+            mapContainer.appendChild(el);
         });
+    }
+
+    function openRegion(region) {
+        mapContainer.style.display = 'none';
+        stageListContainer.style.display = 'flex';
+        regionTitle.textContent = region.name;
+        renderStageList(region.stages);
+    }
+
+    function renderStageList(stageIds) {
+        stageListContent.innerHTML = '';
+        stageIds.forEach(stageId => {
+            if (stageId > 100) return; // Cap at 100
+
+            // Generate Stage Name
+            let name = `ステージ ${stageId}`;
+            // Simple lookup for predefined names if you have them, else generic
+            // Reusing existing names logic would require a map, but we can just use generic + number
+
+            const btn = document.createElement('button');
+            btn.className = 'stage-btn';
+            btn.textContent = name;
+            btn.setAttribute('data-stage', stageId);
+
+            // Locking Logic
+            if (stageId > playerData.maxStageCleared + 1) {
+                btn.disabled = true;
+                btn.classList.add('locked');
+                btn.textContent += ' (Locked)';
+            }
+
+            btn.addEventListener('click', () => {
+                startGame(stageId, name);
+            });
+
+            stageListContent.appendChild(btn);
+        });
+    }
+
+    backToMapBtn.addEventListener('click', () => {
+        stageListContainer.style.display = 'none';
+        mapContainer.style.display = 'flex';
     });
 
     backToSelectBtn.addEventListener('click', () => {
         stopGame();
         gameScreen.style.display = 'none';
         stageSelectScreen.style.display = 'flex';
+        // Go back to map view by default?
+        // Keep current state (stage list or map)
     });
+
+    // Initialize Map on Load
+    initMap();
 
     // System Buttons
     const upgradeWorkerBtn = document.getElementById('upgrade-worker-btn');
@@ -700,13 +787,18 @@ document.addEventListener('DOMContentLoaded', () => {
             // Simple cooldown visual (disable button temporarily)
             btn.disabled = true;
 
-            // Visual Overlay Animation
+            // Visual Overlay Animation (Top Down reveal)
             const overlay = btn.querySelector('.cooldown-overlay');
             if (overlay) {
+                // Set to full height (blocking)
                 overlay.style.height = '100%';
-                overlay.style.transition = `height ${cooldownTime}ms linear`;
+                overlay.style.transition = 'none';
+
                 // Force reflow
                 overlay.offsetHeight;
+
+                // Animate to 0 height (revealing)
+                overlay.style.transition = `height ${cooldownTime}ms linear`;
                 overlay.style.height = '0%';
             }
 
@@ -927,19 +1019,32 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
             ? playerData.selectedDeck
             : playerData.unlockedUnits.slice(0, 3);
 
-        deck.forEach(key => {
-            const unit = UNIT_TYPES[key];
-            const level = playerData.unitLevels[key] || 1;
-            const btn = document.createElement('button');
-            btn.className = 'summon-btn';
-            btn.setAttribute('data-cost', unit.cost);
-            btn.setAttribute('data-type', key);
-            btn.innerHTML = `
-                <div class="cooldown-overlay"></div>
-                ${unit.name} Lv.${level}<br>¥${unit.cost}
-            `;
-            controlsDiv.appendChild(btn);
-        });
+        // Ensure 10 slots (Battle Cats has fixed slots, blank if empty)
+        for (let i = 0; i < 10; i++) {
+            if (i < deck.length) {
+                const key = deck[i];
+                const unit = UNIT_TYPES[key];
+                const btn = document.createElement('button');
+                btn.className = 'summon-btn';
+                btn.setAttribute('data-cost', unit.cost);
+                btn.setAttribute('data-type', key);
+
+                // HTML Structure for New UI
+                btn.innerHTML = `
+                    <div class="cooldown-overlay"></div>
+                    <div class="btn-icon">${unit.icon}</div>
+                    <div class="btn-cost">${unit.cost}円</div>
+                `;
+                controlsDiv.appendChild(btn);
+            } else {
+                // Empty Slot
+                const empty = document.createElement('div');
+                empty.className = 'summon-btn empty';
+                empty.style.backgroundColor = '#5d4037';
+                empty.style.borderColor = '#3e2723';
+                controlsDiv.appendChild(empty);
+            }
+        }
 
         // Update UI
         stageSelectScreen.style.display = 'none';
@@ -1515,17 +1620,31 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
     // --- UI Updates ---
 
     function updateStageButtons() {
-        const buttons = document.querySelectorAll('.stage-btn');
-        buttons.forEach(btn => {
-            const stage = parseInt(btn.getAttribute('data-stage'));
-            if (stage > playerData.maxStageCleared + 1) {
-                btn.disabled = true;
-                btn.classList.add('locked');
-            } else {
-                btn.disabled = false;
-                btn.classList.remove('locked');
-            }
-        });
+        // Since stage buttons are dynamically rendered in the region list,
+        // we can just re-render the current list if visible, or do nothing.
+        // The locking logic is handled in renderStageList.
+        // However, if we finish a stage and return to the list, we want to update it.
+        if (stageListContainer.style.display === 'flex') {
+            // Find which region is open?
+            // Simplified: Just re-click the region?
+            // Actually, we can just leave it. The next time renderStageList is called it updates.
+            // But immediate update:
+            const buttons = document.querySelectorAll('#stage-list-content .stage-btn');
+            buttons.forEach(btn => {
+                const stage = parseInt(btn.getAttribute('data-stage'));
+                if (stage > playerData.maxStageCleared + 1) {
+                    btn.disabled = true;
+                    btn.classList.add('locked');
+                } else {
+                    btn.disabled = false;
+                    btn.classList.remove('locked');
+                    // Remove "Locked" text if present
+                    if (btn.textContent.includes('(Locked)')) {
+                        btn.textContent = btn.textContent.replace(' (Locked)', '');
+                    }
+                }
+            });
+        }
     }
 
     function updateMoneyUI() {
