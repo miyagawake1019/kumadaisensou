@@ -1421,3 +1421,85 @@ h1 {
     0% { transform: translateY(100vh); }
     100% { transform: translateY(-100vh); }
 }
+
+
+/* Realistic Background */
+#battle-field {
+    background: linear-gradient(to bottom, #1a2a6c, #b21f1f, #fdbb2d); /* Sunset */
+    border-bottom: none;
+    position: relative;
+    overflow: hidden;
+}
+
+#battle-field::before {
+    content: ''; /* Ground */
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px; /* Lane height */
+    background:
+        linear-gradient(to bottom, #3e2723 0%, #271c19 100%),
+        repeating-linear-gradient(45deg, transparent 0, transparent 10px, rgba(0,0,0,0.2) 10px, rgba(0,0,0,0.2) 20px);
+    z-index: 0;
+    box-shadow: inset 0 10px 20px rgba(0,0,0,0.5);
+}
+
+/* Realistic Clouds */
+.cloud-bg {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    filter: blur(10px);
+    animation: floatCloud 20s linear infinite;
+    z-index: 0;
+}
+
+/* Unit Realism */
+.unit {
+    filter: drop-shadow(5px 5px 5px rgba(0,0,0,0.7)); /* Strong shadow */
+    transition: left 0.1s linear, filter 0.1s;
+}
+
+/* Realistic Tower */
+#player-base::before {
+    background: repeating-linear-gradient(90deg, #5d4037, #5d4037 20px, #4e342e 20px, #4e342e 40px);
+    box-shadow: 10px 10px 30px rgba(0,0,0,0.8);
+}
+
+#enemy-base::before {
+    background: repeating-linear-gradient(90deg, #37474f, #37474f 20px, #263238 20px, #263238 40px);
+    box-shadow: -10px 10px 30px rgba(0,0,0,0.8);
+}
+
+/* Screen Shake Class */
+.shake {
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translate3d(-1px, 0, 0); }
+    20%, 80% { transform: translate3d(2px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+    40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+/* Particles */
+.particle {
+    position: absolute;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 100;
+}
+
+.particle.blood {
+    background-color: #8a0303;
+    box-shadow: 0 0 2px red;
+}
+
+.particle.dust {
+    background-color: #795548;
+    opacity: 0.6;
+}

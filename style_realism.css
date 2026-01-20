@@ -1,0 +1,54 @@
+
+/* Realistic Background */
+#battle-field {
+    background: linear-gradient(to bottom, #87CEEB 0%, #E0F7FA 50%, #8D6E63 50%, #5D4037 100%) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Clouds/Scenery (Pseudo-elements) */
+#battle-field::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 10%;
+    width: 100px;
+    height: 40px;
+    background: rgba(255,255,255,0.8);
+    border-radius: 50%;
+    box-shadow: 20px 10px 0 10px rgba(255,255,255,0.8);
+    animation: drift 60s linear infinite;
+    z-index: 1;
+}
+
+@keyframes drift {
+    from { transform: translateX(-100px); }
+    to { transform: translateX(800px); }
+}
+
+/* Realistic Towers */
+.base {
+    width: 120px !important;
+    height: 180px !important;
+    z-index: 15;
+}
+
+#player-base::before {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Log_Cabin_-_panoramio.jpg/320px-Log_Cabin_-_panoramio.jpg') center/cover !important;
+    border: 3px solid #3e2723;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.5);
+}
+
+#enemy-base::before {
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Clock_Tower_-_Palace_of_Westminster%2C_London_-_May_2007.jpg/171px-Clock_Tower_-_Palace_of_Westminster%2C_London_-_May_2007.jpg') center/cover !important;
+    clip-path: none !important;
+    border: 3px solid #263238;
+    border-radius: 5px;
+    box-shadow: -5px 5px 10px rgba(0,0,0,0.5);
+}
+
+/* Remove cartoon shapes */
+#player-base::after, #enemy-base::after {
+    display: none;
+}

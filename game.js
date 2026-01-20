@@ -1408,6 +1408,8 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
                             }
 
                             // Visuals
+                            spawnParticles(u2.x, 20 + 20, isCritical ? 'blood' : 'dust', 5); // Realistic Hit FX
+
                             if (isCritical) {
                                 visualizeCritical(u2);
                             } else {
@@ -1782,10 +1784,65 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
     function visualizeBaseDamage(side) {
         const base = document.getElementById(side + '-base');
+        const container = document.getElementById('game-container');
+
+        // Shake Screen on Base Hit
+        container.classList.add('shake');
+        setTimeout(() => container.classList.remove('shake'), 500);
+
         base.style.transform = side === 'enemy' ? 'scaleX(-1) scale(1.1)' : 'scale(1.1)';
         setTimeout(() => {
             base.style.transform = side === 'enemy' ? 'scaleX(-1)' : 'scale(1)';
         }, 100);
+
+        // Particles
+        const x = side === 'player' ? 50 : 750;
+        spawnParticles(x, 100, 'dust', 10);
+    }
+
+    function spawnParticles(x, y, type, count) {
+        for(let i=0; i<count; i++) {
+            const p = document.createElement('div');
+            p.className = `particle ${type}`;
+            p.style.left = x + 'px';
+            p.style.bottom = y + 'px';
+
+            // Random Velocity
+            const angle = Math.random() * Math.PI * 2;
+            const speed = Math.random() * 5 + 2;
+            const vx = Math.cos(angle) * speed;
+            const vy = Math.sin(angle) * speed;
+
+            document.getElementById('lane').appendChild(p); // Add to lane to move with parallax if implemented, or just lane coordinate system
+
+            // Animate
+            let life = 1.0;
+            let currentX = x;
+            let currentY = y;
+            let currentVy = vy;
+
+            const animateParticle = () => {
+                life -= 0.05;
+                if (life <= 0) {
+                    p.remove();
+                    return;
+                }
+
+                currentX += vx;
+                currentY += currentVy;
+                currentVy -= 0.5; // Gravity
+
+                // Floor collision (lane bottom is 0 relative to bottom)
+                if (currentY < 0) currentY = 0;
+
+                p.style.left = currentX + 'px';
+                p.style.bottom = currentY + 'px';
+                p.style.opacity = life;
+
+                requestAnimationFrame(animateParticle);
+            };
+            requestAnimationFrame(animateParticle);
+        }
     }
 
     function createFireEffect(x, y) {
@@ -1947,6 +2004,8 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         playerData,
         UNIT_TYPES,
         useGodAbility,
-        updateGlobalCoinsUI
+        updateGlobalCoinsUI,
+        visualizeBaseDamage,
+        spawnParticles
     };
 });
