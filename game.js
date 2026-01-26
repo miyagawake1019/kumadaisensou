@@ -104,12 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
         'paper_kuma': { name: '紙グマ', cost: 5, hp: 500, attack: 1, speed: 3, cooldown: 100, icon: '📄', id: 303, rarity: 'common', abilities: {} },
 
         // --- Enemy Only Units (Traits) ---
-        'red_bear': { name: '赤グマ', hp: 800, attack: 50, speed: 2, icon: '👺', traits: ['red'] },
-        'black_bear': { name: '黒グマ', hp: 400, attack: 300, speed: 6, icon: '🕶️', traits: ['black'] },
-        'float_bear': { name: '浮遊グマ', hp: 600, attack: 80, speed: 3, icon: '🚁', traits: ['floating'] },
-        'metal_bear': { name: 'メタルグマ敵', hp: 30, attack: 50, speed: 2, icon: '⚙️', traits: ['metal'] }, // Low HP but hard to kill
-        'angel_bear': { name: '天使グマ敵', hp: 1000, attack: 100, speed: 2, icon: '👼', traits: ['angel'] },
-        'alien_bear': { name: 'エイリアングマ敵', hp: 1500, attack: 200, speed: 2, icon: '👽', traits: ['alien'] },
+        'red_bear': { name: '赤グマ', hp: 2000, attack: 200, speed: 2, icon: '👺', traits: ['red'] },
+        'black_bear': { name: '黒グマ', hp: 1500, attack: 800, speed: 6, icon: '🕶️', traits: ['black'] },
+        'float_bear': { name: '浮遊グマ', hp: 1800, attack: 300, speed: 3, icon: '🚁', traits: ['floating'] },
+        'metal_bear': { name: 'メタルグマ敵', hp: 50, attack: 100, speed: 2, icon: '⚙️', traits: ['metal'] }, // Low HP but hard to kill
+        'angel_bear': { name: '天使グマ敵', hp: 3000, attack: 500, speed: 2, icon: '👼', traits: ['angel'] },
+        'alien_bear': { name: 'エイリアングマ敵', hp: 4000, attack: 600, speed: 2, icon: '👽', traits: ['alien'] },
         // New Units 2
         'burger': { name: 'バーガーグマ', cost: 500, hp: 1000, attack: 200, speed: 2, cooldown: 1000, icon: '🍔', id: 78, rarity: 'common' },
         'pizza': { name: 'ピザグマ', cost: 600, hp: 800, attack: 300, speed: 3, cooldown: 1200, icon: '🍕', id: 79, rarity: 'common' },
@@ -1219,8 +1219,8 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         // Scale Enemy Stats
         if (side === 'enemy') {
             // Stronger Enemies: Exponential Scaling
-            // 1.15^Stage
-            const multiplier = Math.pow(1.15, gameState.stage);
+            // 1.2^Stage (Increased from 1.15)
+            const multiplier = Math.pow(1.2, gameState.stage);
             hp *= multiplier;
             attack *= multiplier;
         } else if (side === 'player' && type === 'little') {
@@ -1259,6 +1259,13 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         el.classList.add('unit', side);
         el.setAttribute('data-type', type);
         el.textContent = UNIT_TYPES[type].icon;
+
+        // Add Trait Classes
+        if (UNIT_TYPES[type].traits) {
+            UNIT_TYPES[type].traits.forEach(trait => {
+                el.classList.add(`trait-${trait}`);
+            });
+        }
 
         if (side === 'player' && level > 10) {
             el.classList.add('unit-evolved');
@@ -1409,6 +1416,7 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
 
                             // Visuals
                             spawnParticles(u2.x, 20 + 20, isCritical ? 'blood' : 'dust', 5); // Realistic Hit FX
+                            visualizeAttack(u1, u2);
 
                             if (isCritical) {
                                 visualizeCritical(u2);
@@ -1762,6 +1770,49 @@ HP: ${unit.hp + (level-1)*100} / ATK: ${unit.attack + (level-1)*100}
         setTimeout(() => {
             if (unit.element) unit.element.style.filter = 'none';
         }, 200);
+    }
+
+    function visualizeAttack(attacker, target) {
+        const type = attacker.type;
+        const x = target.x; // Hit location
+        const y = 30 + Math.random() * 20; // Slightly varying height
+
+        let effectClass = 'effect-slash'; // Default
+        let icon = '💥';
+
+        // Determine Effect based on Attacker
+        if (type === 'magic' || type === 'wizard' || type === 'witch') {
+            effectClass = 'effect-magic';
+            icon = '✨';
+        } else if (type === 'fire' || type === 'dragon' || type === 'red_bear') {
+            effectClass = 'effect-fire';
+            icon = '🔥';
+        } else if (type === 'ice') {
+            effectClass = 'effect-ice';
+            icon = '❄️';
+        } else if (type === 'thunder' || type === 'god') {
+            effectClass = 'effect-thunder';
+            icon = '⚡';
+        } else if (type === 'alien' || type === 'galaxy' || type === 'universe' || type === 'alien_bear') {
+            effectClass = 'effect-alien';
+            icon = '💫';
+        } else if (type === 'ninja' || type === 'samurai' || type === 'hero') {
+            effectClass = 'effect-slash';
+            icon = '⚔️';
+        }
+
+        // Create Element
+        const el = document.createElement('div');
+        el.className = `attack-effect ${effectClass}`;
+        el.textContent = icon;
+        el.style.left = (x - 10) + 'px'; // Center roughly
+        el.style.bottom = y + 'px';
+
+        const lane = document.getElementById('lane');
+        if (lane) lane.appendChild(el);
+
+        // Remove after animation
+        setTimeout(() => el.remove(), 500);
     }
 
     function visualizeCritical(unit) {

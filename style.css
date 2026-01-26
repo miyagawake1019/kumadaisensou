@@ -979,16 +979,48 @@ h1 {
 .stage-treasure-indicator.bronze { background: #cd7f32; border-color: brown; }
 
 /* Trait Visuals */
-.unit[data-type="red_bear"] { background-color: #ffcdd2; border-color: #d32f2f; }
-.unit[data-type="black_bear"] { background-color: #424242; color: white; border-color: black; }
-.unit[data-type="float_bear"] { animation: floatBob 1s ease-in-out infinite; }
-.unit[data-type="metal_bear"] { background: linear-gradient(135deg, #e0e0e0, #9e9e9e); border-color: #616161; }
-.unit[data-type="angel_bear"] { box-shadow: 0 0 15px gold; border-color: #ffeb3b; }
-.unit[data-type="alien_bear"] { filter: hue-rotate(90deg); border-color: #00e676; }
+.unit.trait-red {
+    background-color: #ffcdd2;
+    border-color: #d32f2f;
+    box-shadow: 0 0 10px #e57373;
+}
+.unit.trait-black {
+    background-color: #212121;
+    color: white;
+    border-color: #000;
+    box-shadow: 0 0 5px #000;
+}
+.unit.trait-floating {
+    animation: floatBob 1s ease-in-out infinite !important; /* Override walking sometimes */
+    box-shadow: 0 15px 5px rgba(0,0,0,0.2); /* Shadow below */
+}
+.unit.trait-metal {
+    background: linear-gradient(135deg, #cfd8dc 0%, #eceff1 50%, #b0bec5 100%);
+    border-color: #78909c;
+    color: #37474f;
+    box-shadow: inset 0 0 5px white;
+}
+.unit.trait-angel {
+    background-color: #fffde7;
+    border-color: #fdd835;
+    box-shadow: 0 0 20px gold;
+}
+.unit.trait-alien {
+    background-color: #000;
+    color: #00e676;
+    border-color: #00e676;
+    box-shadow: inset 0 0 10px #00e676, 0 0 5px #00e676;
+}
+.unit.trait-zombie {
+    background-color: #4a148c;
+    color: #b9f6ca;
+    border-color: #880e4f;
+    filter: sepia(1) hue-rotate(250deg) saturate(2);
+}
 
 @keyframes floatBob {
     0%, 100% { transform: translateY(0) scaleX(-1); } /* Keep enemy flip */
-    50% { transform: translateY(-10px) scaleX(-1); }
+    50% { transform: translateY(-15px) scaleX(-1); }
 }
 
 /* Critical Hit Visual */
@@ -1503,3 +1535,25 @@ h1 {
     background-color: #795548;
     opacity: 0.6;
 }
+
+
+/* Attack Effects */
+.attack-effect {
+    position: absolute;
+    font-size: 2em;
+    pointer-events: none;
+    z-index: 80;
+    animation: attackPop 0.3s ease-out forwards;
+}
+
+@keyframes attackPop {
+    0% { transform: scale(0.5); opacity: 1; }
+    50% { transform: scale(1.5); opacity: 1; }
+    100% { transform: scale(1); opacity: 0; }
+}
+
+.effect-magic { color: #e040fb; text-shadow: 0 0 10px purple; }
+.effect-fire { color: #ff5722; text-shadow: 0 0 10px red; }
+.effect-ice { color: #00bcd4; text-shadow: 0 0 10px cyan; }
+.effect-thunder { color: #ffeb3b; text-shadow: 0 0 10px yellow; }
+.effect-alien { color: #00e676; text-shadow: 0 0 10px lime; }
